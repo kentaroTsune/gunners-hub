@@ -1,0 +1,102 @@
+import { useState, useEffect } from 'react';
+import type { Article } from '../../types/article';
+import { useAuth } from '../../context/AuthContext';
+import { addFavorite, removeFavorite, checkIsFavorite } from '../../services/favorites';
+import { useNewsContext } from '../../context/NewsContext';
+
+interface FavoriteButtonProps {
+  article: Article;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) => {
+  const { currentUser } = useAuth();
+  const { updateFavorites } = useNewsContext(); // トップレベルでフックを呼び出す
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (currentUser && article?.article_id) {
+        try {
+          const favoriteStatus = await checkIsFavorite(currentUser.uid, article.article_id);
+          setIsFavorite(favoriteStatus);
+        } catch (error) {
+          console.error('お気に入り状態の確認に失敗しました:', error);
+        }
+      }
+    };
+    checkFavoriteStatus();
+  }, [currentUser, article?.article_id]);
+
+  const handleClick = async () => {
+    if (!currentUser) {
+      window.location.href = '/login';
+      return;
+    }
+    if (!article?.article_id || isProcessing) {
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const newFavoriteStatus = !isFavorite;
+      setIsFavorite(newFavoriteStatus);
+
+      if (newFavoriteStatus) {
+        await addFavorite(currentUser.uid, article);
+      } else {
+        await removeFavorite(currentUser.uid, article.article_id);
+      }
+
+      const updatedStatus = await checkIsFavorite(currentUser.uid, article.article_id);
+      setIsFavorite(updatedStatus);
+      await updateFavorites(); // コンポーネント外で取得したフックを使用
+
+    } catch (error) {
+      console.error('お気に入り操作に失敗しました:', {
+        error,
+        articleId: article?.article_id,
+        userId: currentUser?.uid
+      });
+      setIsFavorite(prev => !prev); // 状態を元に戻す
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8'
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={isProcessing}
+      aria-label={isFavorite ? 'お気に入りから削除' : 'お気に入りに追加'}
+      className={`${sizeClasses[size]} transition-colors ${
+        isFavorite
+          ? 'text-[#FF69B4] hover:text-[#FF8FAB]'
+          : 'text-gray-300 hover:text-[#FF8FAB]'
+      } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill={isFavorite ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+        />
+      </svg>
+    </button>
+  );
+};
+
+export default FavoriteButton;

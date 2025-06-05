@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "tailwindcss/utilities";
+
+/* 基本スタイル */
+body {
+  background-color: #ffffff;
+  color: #1a202c;
+}

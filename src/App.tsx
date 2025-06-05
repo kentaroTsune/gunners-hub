@@ -1,0 +1,45 @@
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import Header from './components/header/Header';
+import ArticleList from './components/main/ArticleList';
+import ArticleDetail from './components/main/ArticleDetail.tsx';
+import LoginPage from './components/auth/LoginPage';
+import './App.css';
+import { NewsProvider } from './context/NewsContext';
+import { AuthProvider } from './context/AuthContext';
+import Footer from './components/footer/Footer';
+
+function AppContent() {
+  const location = useLocation();
+  
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Header hideActions={location.pathname.includes('/article/')} />
+      <main className="container mx-auto px-4 py-8 flex-grow">
+        <Routes>
+          <Route path="/" element={<ArticleList />} />
+          <Route path="/article/:id" element={<ArticleDetail />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <NewsProvider>
+        <AppContent />
+      </NewsProvider>
+    </AuthProvider>
+  );
+}
+
+export default function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
