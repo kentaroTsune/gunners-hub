@@ -44,7 +44,7 @@ export const setCachedArticles = (articles: Article[]): void => {
   }
   setGenericCache(CACHE_KEY_NEWS, cache);
 }
-export const clearCache = (): void => {
+export const clearArticlesCache = (): void => {
   localStorage.removeItem(CACHE_KEY_NEWS);
 };
 
