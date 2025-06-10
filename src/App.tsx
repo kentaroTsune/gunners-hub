@@ -7,6 +7,7 @@ import './App.css';
 import { NewsProvider } from './context/NewsContext';
 import { AuthProvider } from './context/AuthContext';
 import Footer from './components/footer/Footer';
+import { PlayerList } from './components/player/PlayerList.tsx';
 
 function AppContent() {
   const location = useLocation();
@@ -32,6 +33,7 @@ function App() {
       <NewsProvider>
         <AppContent />
       </NewsProvider>
+      <PlayerList />
     </AuthProvider>
   );
 }

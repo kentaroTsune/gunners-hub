@@ -17,6 +17,14 @@ export default defineConfig(({ mode }) => {
           headers: {
             'Authorization': `DeepL-Auth-Key ${env.VITE_DEEPL_API_KEY}`
           }
+        },
+        '/api/football': {
+          target: 'https://api.football-data.org/v4',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/football/, ''),
+          headers: {
+            'X-Auth-Token': env.VITE_API_FOOTBALL_TOKEN
+          }
         }
       }
     }
