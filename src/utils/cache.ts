@@ -44,10 +44,6 @@ export const setCachedArticles = (articles: Article[]): void => {
   }
   setGenericCache(CACHE_KEY_NEWS, cache);
 }
-export const clearArticlesCache = (): void => {
-  localStorage.removeItem(CACHE_KEY_NEWS);
-};
-
 // 選手データのキャッシュ管理
 export const getCachedPlayers = (): Player[] | null => {
   return getGenericCache<Player[]>(CACHE_KEY_PLAYERS, PLAYERS_CACHE_EXPIRE_MS)
@@ -55,6 +51,9 @@ export const getCachedPlayers = (): Player[] | null => {
 export const setCachedPlayers = (players: Player[]): void => {
   setGenericCache(CACHE_KEY_PLAYERS, players);
 }
-export const clearPlayersCache = (): void => {
-  localStorage.removeItem(CACHE_KEY_PLAYERS);
-}
+// キャッシュクリア
+export const clearCache = (type: 'news' | 'players' = 'news'): void => {
+  localStorage.removeItem(
+    type === 'news' ? CACHE_KEY_NEWS : CACHE_KEY_PLAYERS
+  );
+};
