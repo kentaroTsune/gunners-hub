@@ -32,6 +32,9 @@ export const PlayerCard = ({ player }: { player: Player }) => {
           <span className="text-sm text-gray-500">
             {player.position || 'Position not set'}
           </span>
+          <span className="text-sm text-gray-500">
+            {player.nationality || 'Nationality not set'}
+          </span>
         </div>
         <h3 className="text-lg font-bold mb-2">
           {player.name}
