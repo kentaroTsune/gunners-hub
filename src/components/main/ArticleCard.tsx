@@ -1,13 +1,10 @@
 import { Link } from 'react-router-dom';
-// import { useNewsContext } from '../../context/NewsContext';
 import type { Article } from '../../types/article';
 import FavoriteButton from '../common/FavoriteButton';
 
 type Props = { article: Article };
 
 const ArticleCard = ({ article }: Props) => {
-  // const { toggleFavorite } = useNewsContext();
-
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <img
@@ -21,7 +18,7 @@ const ArticleCard = ({ article }: Props) => {
           }
         })()}
         alt={article.translatedTitle || article.title}
-        className="w-full h-48 object-cover"
+        className="w-full md:h-50 object-cover"
         loading="lazy"
         onError={(e) => {
           const img = e.currentTarget;

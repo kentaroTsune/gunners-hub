@@ -7,11 +7,11 @@ import './App.css';
 import { NewsProvider } from './context/NewsContext';
 import { AuthProvider } from './context/AuthContext';
 import Footer from './components/footer/Footer';
-import { PlayerList } from './components/player/PlayerList.tsx';
+import { PlayerList } from './components/player/PlayerList';
 
 function AppContent() {
   const location = useLocation();
-  
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Header hideActions={location.pathname.includes('/article/')} />
@@ -20,6 +20,7 @@ function AppContent() {
           <Route path="/" element={<ArticleList />} />
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/players" element={<PlayerList />} />
         </Routes>
       </main>
       <Footer />
@@ -33,7 +34,6 @@ function App() {
       <NewsProvider>
         <AppContent />
       </NewsProvider>
-      <PlayerList />
     </AuthProvider>
   );
 }
