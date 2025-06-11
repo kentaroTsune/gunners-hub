@@ -28,7 +28,6 @@ export const PlayerCard = ({ player }: { player: Player }) => {
 
       {/* コンテンツ部分 */}
       <div className="p-4">
-        <p>{player.id}</p>
         <div className="flex justify-between items-start mb-2">
           <span className="text-sm text-gray-500">
             {player.position || 'Position not set'}
