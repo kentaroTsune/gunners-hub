@@ -27,6 +27,8 @@ export const fetchPlayers = async (forceRefresh = false): Promise<Player[]> => {
 
     const data: FootballApiResponse = await response.json();
 
+    console.log(data);
+
     // 必要なデータのみ取得
     const players = data.squad.map(player => ({
       id: player.id.toString(),

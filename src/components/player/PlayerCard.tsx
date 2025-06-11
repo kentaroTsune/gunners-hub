@@ -17,7 +17,7 @@ export const PlayerCard = ({ player }: { player: Player }) => {
       <img
         src={getPlayerImage(player.id)}
         alt={player.name}
-        className="w-full md:h-80 object-cover"
+        className="w-full md:h-80 lg:h-50 object-cover"
         loading="lazy"
         onError={(e) => {
           const img = e.currentTarget;

@@ -10,7 +10,7 @@ export const PlayerList = () => {
   return (
     <>
       <h2 className="text-2xl mb-6 font-bold text-gray-800">選手一覧</h2>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {players.map(player => (
           <PlayerCard key={player.id} player={player} />
         ))}
