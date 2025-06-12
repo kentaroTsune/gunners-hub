@@ -1,6 +1,8 @@
 import type { Player } from '../../types/player';
+import { Link } from 'react-router-dom';
 
 export const PlayerCard = ({ player }: { player: Player }) => {
+
   // 選手画像取得
   const getPlayerImage = (playerId: string) => {
     try {
@@ -12,7 +14,7 @@ export const PlayerCard = ({ player }: { player: Player }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <Link to={`/players/${player.id}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity">
       {/* 画像部分*/}
       <img
         src={getPlayerImage(player.id)}
@@ -25,7 +27,6 @@ export const PlayerCard = ({ player }: { player: Player }) => {
           img.onerror = null;
         }}
       />
-
       {/* コンテンツ部分 */}
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
@@ -40,6 +41,6 @@ export const PlayerCard = ({ player }: { player: Player }) => {
           {player.name}
         </h3>
       </div>
-    </div>
+    </Link>
   );
 };
