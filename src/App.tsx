@@ -8,6 +8,7 @@ import { NewsProvider } from './context/NewsContext';
 import { AuthProvider } from './context/AuthContext';
 import Footer from './components/footer/Footer';
 import { PlayerList } from './components/player/PlayerList';
+import { PlayerDetail } from './components/player/PlayerDetail';
 
 function AppContent() {
   const location = useLocation();
@@ -21,6 +22,7 @@ function AppContent() {
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/players" element={<PlayerList />} />
+          <Route path="/players/:id" element={<PlayerDetail />} />
         </Routes>
       </main>
       <Footer />
