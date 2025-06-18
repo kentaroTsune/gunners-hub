@@ -3,6 +3,7 @@ import { usePlayerDetail } from '../../hooks/usePlayerDetail';
 import { StatCard } from '../common/StatCard';
 import { BioSection } from './BioSection';
 import { PlayerInfoSection } from './PlayerInfoSection';
+import { PlayerImage } from './PlayerImage';
 
 interface PlayerStats {
   appearances: number;
@@ -13,7 +14,6 @@ interface PlayerStats {
 export const PlayerDetail = () => {
   const { id } = useParams();
   const { player } = usePlayerDetail(id || '');
-  // デフォルトのモックデータ
   const defaultStats: PlayerStats = {
     appearances: 0,
     goals: 0,
@@ -24,8 +24,9 @@ export const PlayerDetail = () => {
     <>
       {/* 基本情報 */}
       <PlayerInfoSection name={player?.name} position={player?.position} nationality={player?.nationality} />
+      <PlayerImage imageUrl={player?.imageUrl} name={player?.name || ''} />
       {/* スタッツ */}
-      <div className="bg-white rounded-lg shadow p-6 mb-8">
+      <div className="p-6 mb-8">
         <h2 className="text-2xl font-bold mb-4">今シーズンのスタッツ</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <StatCard title="出場試合数" value={player?.stats?.appearances ?? defaultStats.appearances} />

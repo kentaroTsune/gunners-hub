@@ -1,24 +1,26 @@
 import type { Player } from '../types/player';
+import playersData from '../data/players.json';
 
 interface UsePlayerDetailResult {
-  player: Player | null;
+  player: (Player & { imageUrl: string }) | null;
 }
 
 export const usePlayerDetail = (id: string): UsePlayerDetailResult => {
-  const mockPlayer = {
-    id,
-    name: 'William Saliba',
-    position: 'Defender',
-    nationality: 'France',
-    stats: {
-      appearances: 38,
-      goals: 2,
-      assists: 4
-    },
-    bio: '優れたディフェンダーであるウィリアムは、私たちのトップチームでの2年目のシーズンも、ヨーロッパで最高のセンターバックの1人としての地位を確立し続けました。優雅でスピードのあるディフェンダーは、1989/90シーズンのリー・ディクソン以来、リーグシーズンの全時間出場を果たした初のアーセナルのフィールドプレーヤーとなり、プレミアリーグの最も堅固な守備の要として、リーグの他のどのセンターバックよりも多く、213回のボール奪取を果たした。ウィリアムは、2019年7月に契約を交わした後、2022/23シーズンに待望のデビューを果たし、最初から好印象を与え、2023年3月に背中の怪我でシーズン終了となるまで、チームのタイトル獲得を支えました。彼はもともとサンテティエンヌでブレイクを果たし、FCバルセロナ加入後もローン移籍を続け、フランスカップ決勝に進出。その後、2020/21シーズンの半分をニースで過ごしました。翌シーズンにはマルセイユにローン移籍し、リーグ・アン年間最優秀若手選手に選ばれ、リーグ・オブ・ザ・イヤーにも選出されたほか、代表デビューも果たし、チームの2位に貢献しました。彼は2022年のワールドカップでフランス代表として出場し、母国のユーロ2024キャンペーンでは常にピッチに立ち、フランスが準決勝に進出した際にはUEFAの大会最優秀チームに選出された。'
-  };
+
+  // JSONデータから該当選手を検索
+  const playerData = playersData.players.find(p => p.id === id);
+  if (!playerData) {
+    console.warn(`Player with id ${id} not found`);
+    return { player: null };
+  }
+
+  // 画像URLを生成
+  const imageUrl = `/src/assets/img/${playerData.image}`;
 
   return {
-    player: mockPlayer
+    player: {
+      ...playerData,
+      imageUrl
+    }
   };
 };

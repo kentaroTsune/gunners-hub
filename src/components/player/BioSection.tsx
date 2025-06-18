@@ -3,7 +3,7 @@ interface BioSectionProps {
 }
 
 export const BioSection = ({ bio }: BioSectionProps) => (
-  <div className="bg-white rounded-lg shadow p-6 mb-8">
+  <div className="p-6 mb-8">
     <h2 className="text-2xl font-bold mb-4">選手紹介</h2>
     {bio ? (
       <div className="prose max-w-none whitespace-pre-line">

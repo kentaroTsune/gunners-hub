@@ -5,7 +5,7 @@ interface PlayerInfoSectionProps {
 }
 
 export const PlayerInfoSection = ({ name, position, nationality }: PlayerInfoSectionProps) => (
-  <div className="bg-white rounded-lg shadow p-6 mb-8">
+  <div className="p-6 mb-8">
     <h1 className="text-3xl font-bold mb-2">{name}</h1>
     <div className="flex gap-4 text-gray-600">
       <span>{position}</span>

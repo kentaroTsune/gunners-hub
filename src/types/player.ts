@@ -6,8 +6,9 @@ interface PlayerStats {
 export interface Player {
   id: string;
   name: string;
-  nationality: string;
   position: string;
+  nationality: string;
+  image?: string;
   stats?: PlayerStats;
   bio?: string;
 }
