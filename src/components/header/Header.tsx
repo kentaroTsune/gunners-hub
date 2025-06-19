@@ -25,6 +25,14 @@ const Header = ({ hideActions = false }) => {
         {!hideActions && (
           <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
             <div className="flex gap-2">
+              <Link
+                to="/players"
+                className="px-3 py-2 rounded transition-colors bg-white text-gray-800 hover:bg-gray-100"
+              >
+                選手一覧
+              </Link>
+            </div>
+            <div className="flex gap-2">
               <button
                 onClick={() => setSelectedCategory(selectedCategory === 'favorites' ? 'all' : 'favorites')}
                 className={`px-3 py-2 rounded transition-colors ${
