@@ -24,7 +24,7 @@ export const PlayerDetail = () => {
     <>
       {/* 基本情報 */}
       <PlayerInfoSection name={player?.name} position={player?.position} nationality={player?.nationality} />
-      <PlayerImage imageUrl={player?.imageUrl} name={player?.name || ''} />
+      <PlayerImage playerId={player?.id} name={player?.name} className="w-32 h-32 rounded-full" />
       {/* スタッツ */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4">今シーズンのスタッツ</h2>

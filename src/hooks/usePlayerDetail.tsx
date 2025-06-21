@@ -1,26 +1,26 @@
+import { useEffect, useState } from 'react';
+import { fetchFirestorePlayer } from '../services/fireStorePlayers';
 import type { Player } from '../types/player';
-import playersData from '../data/players.json';
 
-interface UsePlayerDetailResult {
-  player: (Player & { imageUrl: string }) | null;
+export const usePlayerDetail = (id: string) => {
+  const [player, setPlayer] = useState<Player | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPlayer = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchFirestorePlayer(id);
+        setPlayer(data);
+      } catch (error) {
+        console.error("Firestoreから選手データ取得失敗", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPlayer();
+  }, [id]);
+
+  return { player, loading };
 }
-
-export const usePlayerDetail = (id: string): UsePlayerDetailResult => {
-
-  // JSONデータから該当選手を検索
-  const playerData = playersData.players.find(p => p.id === id);
-  if (!playerData) {
-    console.warn(`Player with id ${id} not found`);
-    return { player: null };
-  }
-
-  // 画像URLを生成
-  const imageUrl = `/src/assets/img/${playerData.image}`;
-
-  return {
-    player: {
-      ...playerData,
-      imageUrl
-    }
-  };
-};
