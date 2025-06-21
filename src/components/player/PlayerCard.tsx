@@ -14,8 +14,7 @@ export const PlayerCard = ({ player }: { player: Player }) => {
   };
 
   return (
-    <>
-    {player.id}
+    <Link to={`/players/${player.id}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity">
       {/* 画像部分*/}
       <img
         src={getPlayerImage(player.id)}
@@ -42,8 +41,6 @@ export const PlayerCard = ({ player }: { player: Player }) => {
           {player.name}
         </h3>
       </div>
-    <Link to={`/players/${player.id}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity">
     </Link>
-    </>
   );
 };
