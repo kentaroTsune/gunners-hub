@@ -1,6 +1,7 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useNewsContext } from '../../context/NewsContext';
 import FavoriteButton from '../common/FavoriteButton';
+import { DetailButton } from '../common/DetailButton';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -12,21 +13,10 @@ const ArticleDetail = () => {
     return <div className="text-center py-8">記事が見つかりません</div>;
   }
 
-  const navigate = useNavigate();
-
   return (
     <article className="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
       <div className="flex justify-between items-start mb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition-colors"
-          aria-label="前のページに戻る"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-          </svg>
-          戻る
-        </button>
+        <DetailButton />
       </div>
       <div className="flex items-center gap-4 mb-4">
         <h1 className="text-2xl font-bold">{article.title}</h1>

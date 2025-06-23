@@ -4,6 +4,7 @@ import { StatCard } from '../common/StatCard';
 import { BioSection } from './BioSection';
 import { PlayerInfoSection } from './PlayerInfoSection';
 import { PlayerImage } from './PlayerImage';
+import { DetailButton } from '../common/DetailButton';
 
 interface PlayerStats {
   appearances: number;
@@ -22,6 +23,9 @@ export const PlayerDetail = () => {
 
   return (
     <>
+      <div className="mb-4">
+        <DetailButton />
+      </div>
       {/* 基本情報 */}
       <PlayerInfoSection name={player?.name} position={player?.position} nationality={player?.nationality} />
       <PlayerImage playerId={player?.id} name={player?.name} className="w-32 h-32 rounded-full" />
