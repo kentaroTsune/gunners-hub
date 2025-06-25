@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchFirestorePlayer } from '../services/fireStorePlayers';
+import { fetchFirestorePlayer } from '../services/firestorePlayers';
 import type { Player } from '../types/player';
 
 export const usePlayerDetail = (id: string) => {
