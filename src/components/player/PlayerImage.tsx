@@ -6,8 +6,6 @@ interface Props {
 }
 
 export const PlayerImage = ({ playerId, name }: Props) => {
-  console.log(playerId);
-
   return (
     <div className="w-full flex justify-center mb-8">
       {playerId ?
