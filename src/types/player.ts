@@ -3,6 +3,7 @@ interface PlayerStats {
   goals: number;
   assists: number;
 }
+
 export interface Player {
   id: string;
   name: string;
@@ -14,3 +15,17 @@ export interface Player {
 }
 
 export type Players = Player[];
+
+export interface PlayerEditData {
+  name: string;
+  position: string;
+  nationality: string;
+  image: string;
+  bio: string;
+}
+
+export interface EditState {
+  isEditing: boolean;
+  editData: PlayerEditData;
+  originalData: PlayerEditData;
+}
