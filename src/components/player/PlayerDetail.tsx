@@ -109,11 +109,10 @@ export const PlayerDetail = () => {
           </div>
         )}
       </div>
-
+      {/* 一覧ページに戻るボタン  */}
       <div className="mb-4">
         <DetailButton />
       </div>
-
       {/* 管理者のみ表示される編集コントロール */}
       {isAdmin && (
         <div className="bg-red-300 rounded-lg p-4 mb-6">
@@ -185,7 +184,7 @@ export const PlayerDetail = () => {
           </div>
         </div>
       )}
-
+      {/* 実際の表示フィールド */}
       {!isEditing && (
         <>
           {/* 基本情報 */}
