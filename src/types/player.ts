@@ -29,9 +29,3 @@ export interface EditState {
   editData: PlayerEditData;
   originalData: PlayerEditData;
 }
-
-export interface ImageUploadState {
-  selectedImage: File | null;
-  imagePreview: string | null;
-  uploading: boolean;
-}

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { usePlayerDetail } from '../../hooks/usePlayerDetail';
 import { useAuth } from '../../hooks/useAuth';
-import type { PlayerEditData, ImageUploadState } from '../../types/player';
+import type { PlayerEditData } from '../../types/player';
 import { StatCard } from '../common/StatCard';
 import { DetailButton } from '../common/DetailButton';
 import { BioSection } from './BioSection';
@@ -37,11 +37,6 @@ export const PlayerDetail = () => {
     image: '',
     bio: ''
   });
-  const [imageUpload, setImageUpload] = useState<ImageUploadState>({
-    selectedImage: null,
-    imagePreview: null,
-    uploading: false
-  });
 
   const handleEditStart = (): void => {
     if (!player) return;
@@ -65,11 +60,6 @@ export const PlayerDetail = () => {
   const handleEditCancel = (): void => {
     setEditData(originalData);
     setIsEditing(false);
-    setImageUpload({
-      selectedImage: null,
-      imagePreview: null,
-      uploading: false
-    });
 
     // デバッグ
     // console.log('編集をキャンセル', originalData);
@@ -83,38 +73,6 @@ export const PlayerDetail = () => {
 
     // デバッグ
     // console.log(`${field}を更新:`, value);
-  }
-
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageUpload(prev => ({
-        ...prev,
-        selectedImage: file,
-      }));
-
-      // プレビュー表示
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImageUpload(prev => ({
-          ...prev,
-          imagePreview: e.target?.result as string
-        }));
-      };
-      reader.readAsDataURL(file);
-
-      console.log('画像選択:', file.name, file.size, 'bytes');
-    }
-  }
-
-  const handleImageRemove = (): void => {
-    setImageUpload({
-      selectedImage: null,
-      imagePreview: null,
-      uploading: false
-    });
-
-    console.log('画像選択を削除');
   }
 
   const defaultStats: PlayerStats = {
@@ -148,8 +106,7 @@ export const PlayerDetail = () => {
             <p><strong>編集中データ:</strong></p>
             <p>名前: {editData.name}</p>
             <p>ポジション: {editData.position}</p>
-            <p>画像選択: {imageUpload.selectedImage ? 'あり' : 'なし'}</p>
-            <p>プレビュー: {imageUpload.imagePreview ? 'あり' : 'なし'}</p>
+            <p>国籍: {editData.nationality}</p>
           </div>
         )}
       </div>
@@ -225,55 +182,6 @@ export const PlayerDetail = () => {
               onChange={(e) => handleEditDataChange('nationality', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              選手画像
-            </label>
-            {/* 現在の画像またはプレビューの表示 */}
-            <div className="mb-3">
-              {imageUpload.imagePreview ? (
-                // 新しく選択した画像のプレビュー
-                <div className="relative inline-block">
-                  <img
-                    src={imageUpload.imagePreview}
-                    alt="プレビュー"
-                    className="w-32 h-32 object-cover rounded-md border border-gray-300"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleImageRemove}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
-                  >
-                    ×
-                  </button>
-                  <p className="text-xs text-gray-500 mt-1">新しい画像（未保存）</p>
-                </div>
-              ) : editData.image ? (
-                <div>
-                  <img
-                    src={editData.image}
-                    alt="現在の画像"
-                    className="w-32 h-32 object-cover rounded-md border border-gray-300"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">現在の画像</p>
-                </div>
-              ) : (
-                <div className="w-32 h-32 bg-gray-200 rounded-md border border-gray-300 flex items-center justify-center">
-                  <span className="text-gray-400 text-sm">画像なし</span>
-                </div>
-              )}
-            </div>
-            {/* ファイル選択ボタン */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageSelect}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              JPG, PNG, GIF形式の画像をアップロードできます
-            </p>
           </div>
         </div>
       )}
