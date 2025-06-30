@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { usePlayerDetail } from '../../hooks/usePlayerDetail';
 import { useAuth } from '../../hooks/useAuth';
+import { updatePlayerData, extractEdittableFields } from '../../utils/playerService';
 import type { PlayerEditData } from '../../types/player';
 import { StatCard } from '../common/StatCard';
 import { DetailButton } from '../common/DetailButton';
@@ -37,6 +38,7 @@ export const PlayerDetail = () => {
     image: '',
     bio: ''
   });
+  const [saving, setSaving] = useState<boolean>(false);
 
   const handleEditStart = (): void => {
     if (!player) return;
@@ -75,6 +77,48 @@ export const PlayerDetail = () => {
     // console.log(`${field}を更新:`, value);
   }
 
+  const handleSave = async (): Promise<void> => {
+    if (!player?.id) {
+      alert("選手情報が取得できません")
+      return;
+    }
+
+    // 既存データから変更があるかチェック
+    const hasChanges =
+      editData.name !== originalData.name ||
+      editData.position !== originalData.position ||
+      editData.nationality !== originalData.nationality ||
+      editData.bio !== originalData.bio;
+
+    if (!hasChanges) {
+      alert("変更がありません");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      // 編集可能なフィールドのみを抽出
+      const updateData = extractEdittableFields(editData);
+
+      // Firestore更新
+      await updatePlayerData(player.id, updateData);
+
+      setOriginalData(editData);
+      setIsEditing(false);
+
+      alert("保存しました！");
+
+      // ページ再読み込み
+      window.location.reload();
+    } catch (error) {
+      console.error('保存エラー:', error);
+      alert('保存に失敗しました。もう一度お試しください。');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const defaultStats: PlayerStats = {
     appearances: 0,
     goals: 0,
@@ -86,8 +130,8 @@ export const PlayerDetail = () => {
       {/* デバッグ */}
       <div style={{
         position: 'fixed',
-        top: '10px',
-        right: '10px',
+        bottom: '10px',
+        left: '10px',
         background: '#f0f0f0',
         padding: '10px',
         border: '1px solid #ccc',
@@ -101,6 +145,7 @@ export const PlayerDetail = () => {
         <p>管理者: {isAdmin ? 'YES' : 'NO'}</p>
         <p>認証ローディング: {loading ? 'YES' : 'NO'}</p>
         <p>編集モード: {isEditing ? 'ON' : 'OFF'}</p>
+        <p>保存中: {saving ? 'YES' : 'NO'}</p>
         {isEditing && (
           <div style={{ marginTop: '10px', borderTop: '1px solid #ccc', paddingTop: '10px' }}>
             <p><strong>編集中データ:</strong></p>
@@ -131,10 +176,11 @@ export const PlayerDetail = () => {
             ) : (
               <div className="space-x-2">
                 <button
-                  onClick={() => console.log('保存処理（未実装）')}
+                  onClick={handleSave}
+                  disabled={saving}
                   className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                 >
-                  保存
+                  {saving ? "保存中..." : "保存" }
                 </button>
                 <button
                   onClick={handleEditCancel}
@@ -158,6 +204,7 @@ export const PlayerDetail = () => {
               type="text"
               value={editData.name}
               onChange={(e) => handleEditDataChange('name', e.target.value)}
+              disabled={saving}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -169,6 +216,7 @@ export const PlayerDetail = () => {
               type="text"
               value={editData.position}
               onChange={(e) => handleEditDataChange('position', e.target.value)}
+              disabled={saving}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -180,6 +228,7 @@ export const PlayerDetail = () => {
               type="text"
               value={editData.nationality}
               onChange={(e) => handleEditDataChange('nationality', e.target.value)}
+              disabled={saving}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
