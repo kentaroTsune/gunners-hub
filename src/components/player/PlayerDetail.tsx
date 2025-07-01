@@ -22,7 +22,6 @@ export const PlayerDetail = () => {
   const { user, isAdmin, loading } = useAuth();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  // 編集中のデータ
   const [editData, setEditData] = useState<PlayerEditData>({
     name: '',
     position: '',
@@ -30,7 +29,6 @@ export const PlayerDetail = () => {
     image: '',
     bio: ''
   });
-  // 編集前の元データ
   const [originalData, setOriginalData] = useState<PlayerEditData>({
     name: '',
     position: '',
@@ -54,27 +52,20 @@ export const PlayerDetail = () => {
     setOriginalData(editableData);
     setEditData(editableData);
     setIsEditing(true);
-
-    // デバッグ
-    // console.log("編集モード開始", editableData);
   }
 
   const handleEditCancel = (): void => {
     setEditData(originalData);
     setIsEditing(false);
-
-    // デバッグ
-    // console.log('編集をキャンセル', originalData);
   }
 
   const handleEditDataChange = (field: keyof PlayerEditData, value: string): void => {
+    if (field === 'image') return;
+
     setEditData(prev => ({
       ...prev,
       [field]: value
     }));
-
-    // デバッグ
-    // console.log(`${field}を更新:`, value);
   }
 
   const handleSave = async (): Promise<void> => {
@@ -108,8 +99,6 @@ export const PlayerDetail = () => {
       setIsEditing(false);
 
       alert("保存しました！");
-
-      // ページ再読み込み
       window.location.reload();
     } catch (error) {
       console.error('保存エラー:', error);
@@ -132,10 +121,11 @@ export const PlayerDetail = () => {
         position: 'fixed',
         bottom: '10px',
         left: '10px',
-        background: '#f0f0f0',
-        padding: '10px',
         border: '1px solid #ccc',
         borderRadius: '4px',
+        background: '#f0f0f0',
+        width: '300px',
+        padding: '10px',
         fontSize: '12px',
         zIndex: 1000
       }}>
@@ -152,6 +142,7 @@ export const PlayerDetail = () => {
             <p>名前: {editData.name}</p>
             <p>ポジション: {editData.position}</p>
             <p>国籍: {editData.nationality}</p>
+            <p>選手紹介: {editData.bio ? `${editData.bio.substring(0, 15)}...` : '未入力'}</p>
           </div>
         )}
       </div>
@@ -230,6 +221,18 @@ export const PlayerDetail = () => {
               onChange={(e) => handleEditDataChange('nationality', e.target.value)}
               disabled={saving}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              選手紹介
+            </label>
+            <textarea
+              value={editData.bio}
+              onChange={(e) => handleEditDataChange('bio', e.target.value)}
+              disabled={saving}
+              className="w-full h-80 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="選手の経歴やプロフィールを入力..."
             />
           </div>
         </div>
