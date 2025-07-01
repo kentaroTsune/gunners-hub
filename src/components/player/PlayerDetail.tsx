@@ -16,6 +16,12 @@ interface PlayerStats {
   assists: number;
 }
 
+const defaultStats: PlayerStats = {
+  appearances: 0,
+  goals: 0,
+  assists: 0,
+};
+
 export const PlayerDetail = () => {
   const { id } = useParams();
   const { player } = usePlayerDetail(id || '');
@@ -27,14 +33,16 @@ export const PlayerDetail = () => {
     position: '',
     nationality: '',
     image: '',
-    bio: ''
+    bio: '',
+    stats: defaultStats
   });
   const [originalData, setOriginalData] = useState<PlayerEditData>({
     name: '',
     position: '',
     nationality: '',
     image: '',
-    bio: ''
+    bio: '',
+    stats: defaultStats
   });
   const [saving, setSaving] = useState<boolean>(false);
 
@@ -47,6 +55,7 @@ export const PlayerDetail = () => {
       nationality: player.nationality,
       image: player.image || '',
       bio: player.bio || '',
+      stats: player.stats || defaultStats
     }
 
     setOriginalData(editableData);
@@ -68,6 +77,18 @@ export const PlayerDetail = () => {
     }));
   }
 
+  const handleStatsChange = (statField: keyof PlayerStats, value: string): void => {
+    const numValue = parseInt(value) || 0;
+
+    setEditData(prev => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        [statField]: numValue
+      }
+    }));;
+  };
+
   const handleSave = async (): Promise<void> => {
     if (!player?.id) {
       alert("選手情報が取得できません")
@@ -79,7 +100,10 @@ export const PlayerDetail = () => {
       editData.name !== originalData.name ||
       editData.position !== originalData.position ||
       editData.nationality !== originalData.nationality ||
-      editData.bio !== originalData.bio;
+      editData.bio !== originalData.bio ||
+      editData.stats.appearances !== originalData.stats.appearances ||
+      editData.stats.goals !== originalData.stats.goals ||
+      editData.stats.assists !== originalData.stats.assists;
 
     if (!hasChanges) {
       alert("変更がありません");
@@ -106,12 +130,6 @@ export const PlayerDetail = () => {
     } finally {
       setSaving(false);
     }
-  };
-
-  const defaultStats: PlayerStats = {
-    appearances: 0,
-    goals: 0,
-    assists: 0,
   };
 
   return (
@@ -143,6 +161,9 @@ export const PlayerDetail = () => {
             <p>ポジション: {editData.position}</p>
             <p>国籍: {editData.nationality}</p>
             <p>選手紹介: {editData.bio ? `${editData.bio.substring(0, 15)}...` : '未入力'}</p>
+            <p>出場: {editData.stats.appearances}</p>
+            <p>ゴール: {editData.stats.goals}</p>
+            <p>アシスト: {editData.stats.assists}</p>
           </div>
         )}
       </div>
@@ -234,6 +255,52 @@ export const PlayerDetail = () => {
               className="w-full h-80 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="選手の経歴やプロフィールを入力..."
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              今シーズンのスタッツ
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  試合出場数
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={editData.stats.appearances}
+                  onChange={(e) => handleStatsChange('appearances', e.target.value)}
+                  disabled={saving}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  得点数
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={editData.stats.goals}
+                  onChange={(e) => handleStatsChange('goals', e.target.value)}
+                  disabled={saving}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  アシスト数
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={editData.stats.assists}
+                  onChange={(e) => handleStatsChange('assists', e.target.value)}
+                  disabled={saving}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}

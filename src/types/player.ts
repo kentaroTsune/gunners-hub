@@ -22,6 +22,7 @@ export interface PlayerEditData {
   nationality: string;
   image: string;
   bio: string;
+  stats: PlayerStats;
 }
 
 export interface EditState {
