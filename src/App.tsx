@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/header/Header';
-import ArticleList from './components/main/ArticleList';
 import ArticleDetail from './components/main/ArticleDetail.tsx';
 import LoginPage from './components/auth/LoginPage';
 import './App.css';
@@ -9,8 +8,9 @@ import { AuthProvider } from './context/AuthContext';
 import Footer from './components/footer/Footer';
 import { PlayerList } from './components/player/PlayerList';
 import { PlayerDetail } from './components/player/PlayerDetail';
+import HomePage from './components/main/HomePage.tsx';
 
-function AppContent() {
+const AppContent = () => {
   const location = useLocation();
 
   return (
@@ -18,7 +18,7 @@ function AppContent() {
       <Header hideActions={location.pathname.includes('/article/')} />
       <main className="container mx-auto px-4 py-8 flex-grow">
         <Routes>
-          <Route path="/" element={<ArticleList />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/players" element={<PlayerList />} />
@@ -30,7 +30,7 @@ function AppContent() {
   );
 }
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <NewsProvider>
@@ -40,10 +40,12 @@ function App() {
   );
 }
 
-export default function AppWrapper() {
+const AppWrapper = () => {
   return (
     <Router>
       <App />
     </Router>
   );
 }
+
+export default AppWrapper;
