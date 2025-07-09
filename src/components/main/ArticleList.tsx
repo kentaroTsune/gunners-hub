@@ -17,7 +17,7 @@ const ArticleList = () => {
 
   return (
     <div className="space-y-6 py-8">
-      <h2 className="text-2xl font-bold text-gray-800">最新記事</h2>
+      <h2 className="text-3xl font-bold text-gray-800">最新記事</h2>
       <div key={refreshKey} className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {articles.length === 0 ? (
           <div className="col-span-full text-center py-8">

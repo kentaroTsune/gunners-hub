@@ -1,7 +1,7 @@
 const Fixtures = () => {
   return (
     <div className="space-y-6 py-8">
-      <h2 className="text-2xl font-bold text-gray-800">
+      <h2 className="text-3xl font-bold text-gray-800">
         試合日程
       </h2>
       <ul className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
