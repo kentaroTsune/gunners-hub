@@ -15,7 +15,7 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header hideActions={location.pathname.includes('/article/')} />
+      <Header hideActions={location.pathname !== '/'} />
       <main className="container mx-auto px-4 py-8 flex-grow">
         <Routes>
           <Route path="/" element={<HomePage />} />

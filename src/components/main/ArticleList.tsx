@@ -23,7 +23,7 @@ const ArticleList = () => {
           <div className="col-span-full text-center py-8">
             {searchQuery ?
               `"${searchQuery}"に一致する記事が見つかりませんでした` :
-              '記事がありません'
+              'お気に入り記事がありません'
             }
           </div>
         ) : (

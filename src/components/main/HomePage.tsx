@@ -5,8 +5,8 @@ import History from './History'
 const HomePage = () => {
   return (
     <>
-      <Fixtures />
       <ArticleList />
+      <Fixtures />
       <History />
     </>
   )
