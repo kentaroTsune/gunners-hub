@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import type { Article } from '../../types/article';
 import FavoriteButton from '../common/FavoriteButton';
 
-type Props = { article: Article };
+type ArticleCardProps = { article: Article };
 
-const ArticleCard = ({ article }: Props) => {
+const ArticleCard = ({ article }: ArticleCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <img
