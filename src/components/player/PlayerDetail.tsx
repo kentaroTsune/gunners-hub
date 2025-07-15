@@ -2,21 +2,15 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { usePlayerDetail } from '../../hooks/usePlayerDetail';
 import { useAuth } from '../../hooks/useAuth';
-import { updatePlayerData, extractEdittableFields } from '../../utils/playerService';
-import type { PlayerEditData } from '../../types/player';
+import { updatePlayerData, extractEditableFields } from '../../utils/playerService';
+import type { PlayerEditData, PlayerStats } from '../../types/player';
 import { StatCard } from '../common/StatCard';
 import { DetailButton } from '../common/DetailButton';
 import { BioSection } from './BioSection';
 import { PlayerInfoSection } from './PlayerInfoSection';
 import { PlayerImage } from './PlayerImage';
 
-interface PlayerStats {
-  appearances: number;
-  goals: number;
-  assists: number;
-}
-
-const defaultStats: PlayerStats = {
+export const defaultStats: PlayerStats = {
   appearances: 0,
   goals: 0,
   assists: 0,
@@ -114,7 +108,7 @@ export const PlayerDetail = () => {
       setSaving(true);
 
       // 編集可能なフィールドのみを抽出
-      const updateData = extractEdittableFields(editData);
+      const updateData = extractEditableFields(editData);
 
       // Firestore更新
       await updatePlayerData(player.id, updateData);

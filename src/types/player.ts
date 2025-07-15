@@ -1,4 +1,4 @@
-interface PlayerStats {
+export interface PlayerStats {
   appearances: number;
   goals: number;
   assists: number;
@@ -13,8 +13,6 @@ export interface Player {
   stats?: PlayerStats;
   bio?: string;
 }
-
-export type Players = Player[];
 
 export interface PlayerEditData {
   name: string;

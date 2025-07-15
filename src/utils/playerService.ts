@@ -25,7 +25,7 @@ export const updatePlayerData = async (playerId: string, updateData: Partial<Pla
   }
 };
 
-export const extractEdittableFields = (editData: PlayerEditData): Partial<PlayerEditData> => {
+export const extractEditableFields = (editData: PlayerEditData): Partial<PlayerEditData> => {
   // imageフィールドのみ除外
   const { image, ...edittableFields } = editData;
   return edittableFields;

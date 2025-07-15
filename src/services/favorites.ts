@@ -4,7 +4,7 @@ import type { Article } from '../types/article';
 
 const FAVORITES_COLLECTION = 'favorites';
 
-export interface FavoriteArticle {
+interface FavoriteArticle {
   userId: string;
   articleId: string;
   addedAt: Date;

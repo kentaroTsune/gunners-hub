@@ -1,11 +1,11 @@
 import { getPlayerImageUrlWithFallback } from '../../utils/playerImage';
 
-interface Props {
+interface PlayerImageProps {
   playerId: string | null;
   name?: string;
 }
 
-export const PlayerImage = ({ playerId, name }: Props) => {
+export const PlayerImage = ({ playerId, name }: PlayerImageProps) => {
   return (
     <div className="w-full flex justify-center mb-8">
       {playerId ?
