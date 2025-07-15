@@ -1,11 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useNewsContext } from '../../context/NewsContext';
-import FavoriteButton from '../common/FavoriteButton';
 import { DetailButton } from '../common/DetailButton';
 
 const ArticleDetail = () => {
   const { id } = useParams();
-  const { articles, favorites, toggleFavorite } = useNewsContext();
+  const { articles } = useNewsContext();
 
   const article = articles.find(article => article.article_id === id);
 
@@ -20,11 +19,6 @@ const ArticleDetail = () => {
       </div>
       <div className="flex items-center gap-4 mb-4">
         <h1 className="text-2xl font-bold">{article.title}</h1>
-        <FavoriteButton
-          isFavorite={favorites.includes(article.article_id)}
-          onClick={() => toggleFavorite(article.article_id)}
-          size="lg"
-        />
       </div>
 
       <div className="flex items-center gap-4 mb-6">
