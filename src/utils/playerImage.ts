@@ -1,11 +1,11 @@
-export const getPlayerImageUrl = (playerId: string | null): string => {
-  return `/src/assets/img/${playerId}.jpeg`;
-};
+const IMAGE_PATHS = {
+  BASE_PATH: '/src/assets/img',
+  DUMMY_IMAGE: '/src/assets/img/dummy.jpg',
+} as const;
 
 export const getPlayerImageUrlWithFallback = (playerId: string | null): string => {
-  try {
-    return getPlayerImageUrl(playerId);
-  } catch {
-    return '/src/assets/img/dummy.jpg';
+  if (!playerId) {
+    return IMAGE_PATHS.DUMMY_IMAGE;
   }
+  return `${IMAGE_PATHS.BASE_PATH}/${playerId}.jpg`;
 };

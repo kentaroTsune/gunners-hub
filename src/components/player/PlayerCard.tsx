@@ -1,23 +1,13 @@
-import type { Player } from '../../types/player';
 import { Link } from 'react-router-dom';
+import { getPlayerImageUrlWithFallback } from '../../utils/playerImage';
+import type { Player } from '../../types/player';
 
 export const PlayerCard = ({ player }: { player: Player }) => {
-
-  // 選手画像取得
-  const getPlayerImage = (playerId: string) => {
-    try {
-      // 選手IDで紐付け
-      return `/src/assets/img/${playerId}.jpeg`
-    } catch {
-      return '/src/assets/img/dummy.jpg'
-    }
-  };
-
   return (
     <Link to={`/players/${player.id}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity">
       {/* 画像部分*/}
       <img
-        src={getPlayerImage(player.id)}
+        src={getPlayerImageUrlWithFallback(player.id)}
         alt={player.name}
         className="w-full md:h-80 lg:h-50 object-cover"
         loading="lazy"
