@@ -18,7 +18,7 @@ export interface PlayerEditData {
   name: string;
   position: string;
   nationality: string;
-  image: string;
+  image?: string;
   bio: string;
   stats: PlayerStats;
 }
