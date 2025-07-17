@@ -1,10 +1,16 @@
 import type { Article, CachedArticles } from '../types/article';
 import type { Player } from '../types/player';
 
-export const CACHE_KEY_NEWS = 'arsenal-news-cache';
-const NEWS_CACHE_EXPIRE_MS = 60 * 60 * 1000; // 1時間
-export const CACHE_KEY_PLAYERS = 'arsenal-players-cache';
-const PLAYERS_CACHE_EXPIRE_MS = 7 * 24 * 60 * 60 * 1000; // 1週間
+const CACHE_DURATION = {
+  ONE_HOUR: 60 * 60 * 1000,
+  ONE_DAY: 24 * 60 * 60 * 1000,
+  ONE_WEEK: 7 * 24 * 60 * 60 * 1000,
+} as const;
+
+const CACHE_KEY_NEWS = 'arsenal-news-cache';
+const CACHE_KEY_PLAYERS = 'arsenal-players-cache';
+const NEWS_CACHE_EXPIRE_MS = CACHE_DURATION.ONE_HOUR;
+const PLAYERS_CACHE_EXPIRE_MS = CACHE_DURATION.ONE_WEEK;
 interface GenericCache<T> {
   timestamp: number;
   data: T;
