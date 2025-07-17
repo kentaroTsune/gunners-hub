@@ -4,6 +4,11 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { Link } from 'react-router-dom';
 
+const CATEGORIES = {
+  ALL: 'all',
+  FAVORITES: 'favorites',
+} as const;
+
 const Header = ({ hideActions = false }) => {
   const { currentUser } = useAuth();
   const { setSearchQuery, setSelectedCategory, selectedCategory } = useNewsContext();
@@ -36,15 +41,15 @@ const Header = ({ hideActions = false }) => {
               <div className="flex gap-2">
                 {currentUser && (
                 <button
-                  onClick={() => setSelectedCategory(selectedCategory === 'favorites' ? 'all' : 'favorites')}
+                  onClick={() => setSelectedCategory(selectedCategory === CATEGORIES.FAVORITES ? CATEGORIES.ALL : CATEGORIES.FAVORITES)}
                   className={`px-3 py-2 rounded transition-colors ${
-                    selectedCategory === 'favorites'
+                    selectedCategory === CATEGORIES.FAVORITES
                       ? 'bg-red-700 text-white hover:bg-red-800'
                       : 'bg-white text-gray-800 hover:bg-gray-100'
                   }`}
-                  aria-label={selectedCategory === 'favorites' ? 'すべての記事を表示' : 'お気に入り記事を表示'}
+                  aria-label={selectedCategory === CATEGORIES.FAVORITES ? 'すべての記事を表示' : 'お気に入り記事を表示'}
                 >
-                  {selectedCategory === 'favorites' ? 'すべて表示' : 'お気に入り'}
+                  {selectedCategory === CATEGORIES.FAVORITES ? 'すべて表示' : 'お気に入り'}
                 </button>
                 )}
               </div>

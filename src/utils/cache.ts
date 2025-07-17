@@ -7,17 +7,23 @@ const CACHE_DURATION = {
   ONE_WEEK: 7 * 24 * 60 * 60 * 1000,
 } as const;
 
+const CACHE_TYPES = {
+  NEWS: 'news',
+  PLAYERS: 'players',
+} as const;
+
 const CACHE_KEY_NEWS = 'arsenal-news-cache';
 const CACHE_KEY_PLAYERS = 'arsenal-players-cache';
 const NEWS_CACHE_EXPIRE_MS = CACHE_DURATION.ONE_HOUR;
 const PLAYERS_CACHE_EXPIRE_MS = CACHE_DURATION.ONE_WEEK;
+
 interface GenericCache<T> {
   timestamp: number;
   data: T;
 }
 
 // キャッシュ取得用関数
-export const getGenericCache = <T>(key: string, expiry: number): T | null => {
+const getGenericCache = <T>(key: string, expiry: number): T | null => {
   const cached = localStorage.getItem(key);
   if (!cached) return null;
 
@@ -29,7 +35,7 @@ export const getGenericCache = <T>(key: string, expiry: number): T | null => {
   }
 }
 // キャッシュ更新用関数
-export const setGenericCache = <T>(key: string, data: T): void => {
+const setGenericCache = <T>(key: string, data: T): void => {
   const cache: GenericCache<T> = {
     timestamp: Date.now(),
     data
@@ -48,6 +54,7 @@ export const setCachedArticles = (articles: Article[]): void => {
   };
   setGenericCache(CACHE_KEY_NEWS, cache);
 }
+
 // 選手データのキャッシュ管理
 export const getCachedPlayers = (): Player[] | null => {
   return getGenericCache<Player[]>(CACHE_KEY_PLAYERS, PLAYERS_CACHE_EXPIRE_MS);
@@ -55,9 +62,10 @@ export const getCachedPlayers = (): Player[] | null => {
 export const setCachedPlayers = (players: Player[]): void => {
   setGenericCache(CACHE_KEY_PLAYERS, players);
 }
+
 // キャッシュクリア
-export const clearCache = (type: 'news' | 'players' = 'news'): void => {
+export const clearCache = (type: 'news' | 'players' = CACHE_TYPES.NEWS): void => {
   localStorage.removeItem(
-    type === 'news' ? CACHE_KEY_NEWS : CACHE_KEY_PLAYERS
+    type === CACHE_TYPES.NEWS ? CACHE_KEY_NEWS : CACHE_KEY_PLAYERS
   );
 };
