@@ -1,7 +1,29 @@
-import type { Article } from '../types/article';
 import { translateText } from './translate';
-
 import { getCachedArticles, setCachedArticles } from '../utils/cache';
+import type { Article } from '../types/article';
+
+interface RawArticle {
+  article_id: string;
+  title: string;
+  link: string;
+  keywords?: string[];
+  creator?: string[];
+  description?: string;
+  content?: string;
+  pubDate: string;
+  pubDateTZ?: string;
+  image_url?: string | null;
+  video_url?: string | null;
+  source_id: string;
+  source_name: string;
+  source_priority?: number;
+  source_url: string;
+  source_icon: string;
+  language?: string;
+  country?: string[];
+  category: string | string[];
+  duplicate?: boolean;
+}
 
 export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
   // キャッシュから取得（強制更新でない場合）
@@ -11,7 +33,7 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
       return cached.data;
     }
   }
-  // 環境変数をまとめて取得
+
   const {
     VITE_RSS_ENDPOINT: endpoint,
     VITE_API_KEY: apikey,
@@ -20,7 +42,10 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
     VITE_API_QUERY_CATEGORY: category,
   } = import.meta.env;
 
-  // クエリパラメータ生成
+  if (!endpoint || !apikey || !qInTitle || !rawLang || !category) {
+    throw new Error('Required environment variables are missing for news API');
+  }
+
   const params = new URLSearchParams({
     apikey,
     qInTitle,
@@ -42,14 +67,14 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
     throw new Error('Invalid API response format');
   }
 
-  // データをArticle型に変換
+  // dataをArticle型に変換
   const articles: Article[] = await Promise.all(
-    data.results.map(async (item: any) => {
+    data.results.map(async (item: RawArticle) => {
       let translatedTitle = '';
       try {
         translatedTitle = await translateText(item.title);
       } catch (error) {
-        console.warn('タイトル翻訳失敗:', error);
+        throw new Error(`translation error: ${String(error)}`);
       }
 
       return {
@@ -83,5 +108,6 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
 
   // キャッシュに保存
   setCachedArticles(articles);
+
   return articles;
 };
