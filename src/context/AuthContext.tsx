@@ -8,20 +8,24 @@ type AuthContextType = {
   loading: boolean;
 };
 
-const AuthContext = createContext<AuthContextType>({
-  currentUser: null,
-  loading: true,
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
       setCurrentUser(user);
       setLoading(false);
-    });
+      },
+      (error) => {
+        console.error(`認証状態監視エラー: ${String(error)}`);
+        setLoading(false);
+      }
+    );
 
     return unsubscribe;
   }, []);
@@ -33,4 +37,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) throw new Error('useAuthはAuthProvider内で使用してください');
+  return context;
+};

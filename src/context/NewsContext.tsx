@@ -16,16 +16,7 @@ interface NewsContextType {
   updateFavorites: () => Promise<void>;
 }
 
-const NewsContext = createContext<NewsContextType>({
-  articles: [],
-  favorites: [],
-  setArticles: () => {},
-  searchQuery: '',
-  setSearchQuery: () => {},
-  selectedCategory: 'all',
-  setSelectedCategory: () => {},
-  updateFavorites: async () => {},
-});
+const NewsContext = createContext<NewsContextType | undefined>(undefined);
 
 export const NewsProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser } = useAuth();
@@ -34,16 +25,19 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [favorites, setFavorites] = useState<string[]>([]);
 
+  const clearFavoriteStatus = () => {
+    setFavorites([]);
+    setArticles(prevArticles =>
+      prevArticles.map(article => ({
+        ...article,
+        isFavorite: false
+      }))
+    );
+  }
+
   const updateFavorites = async () => {
     if (!currentUser) {
-      // ログアウト状態ではお気に入りを空にする
-      setFavorites([]);
-      setArticles(prevArticles =>
-        prevArticles.map(article => ({
-          ...article,
-          isFavorite: false
-        }))
-      );
+      clearFavoriteStatus();
       return;
     }
 
@@ -59,48 +53,39 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
         }))
       );
     } catch (error) {
-      console.error('Failed to update favorites:', error);
-      throw error;
+      throw new Error(`お気に入り更新エラー ${currentUser.uid}: ${String(error)}`);
     }
   };
 
+  // データ取得とお気に入り更新
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchNews();
         setArticles(data);
 
-        // ログイン状態ならお気に入りを取得
         if (currentUser) {
           await updateFavorites();
         }
       } catch (error) {
-        console.error('Failed to fetch articles:', error);
+        console.error(`ニュース取得エラー: ${String(error)}`);
         setArticles([]);
       }
     };
     fetchData();
   }, [currentUser]);
 
-  // ログイン状態が変わった時に状態を更新
+  // ログアウト時のクリア
   useEffect(() => {
     if (!currentUser) {
-      // ログアウト時にお気に入りをクリア
-      setFavorites([]);
-      setArticles(prevArticles =>
-        prevArticles.map(article => ({
-          ...article,
-          isFavorite: false
-        }))
-      );
+      clearFavoriteStatus();
     }
   }, [currentUser]);
 
   const filteredArticles = articles.filter(article => {
     const matchesSearch = searchQuery === '' ||
       article.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (article.content && article.content.toLowerCase().includes(searchQuery.toLowerCase()));
+      article.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesFavorite = selectedCategory === 'favorites'
       ? favorites.includes(article.article_id)
@@ -129,8 +114,8 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
 
 export const useNewsContext = (): NewsContextType => {
   const context = useContext(NewsContext);
-  if (!context) {
-    throw new Error('useNews must be used within a NewsProvider');
+  if (context === undefined) {
+    throw new Error('useNewsContextはNewsProvider内で使用してください');
   }
   return context;
 };
