@@ -20,8 +20,7 @@ export const addFavorite = async (userId: string, article: Article): Promise<voi
       articleData: article
     });
   } catch (error) {
-    console.error('Error adding favorite:', error);
-    throw error;
+    throw new Error(`お気に入り追加エラー ${userId}/${article.article_id}: ${String(error)}`);
   }
 };
 
@@ -36,8 +35,7 @@ export const removeFavorite = async (userId: string, articleId: string): Promise
     const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
     await Promise.all(deletePromises);
   } catch (error) {
-    console.error('Error removing favorite:', error);
-    throw error;
+    throw new Error(`お気に入り削除エラー ${userId}/${articleId}: ${String(error)}`);
   }
 };
 
@@ -57,10 +55,10 @@ export const getFavorites = async (userId: string): Promise<FavoriteArticle[]> =
         articleData: data.articleData
       };
     });
+
     return favorites;
   } catch (error) {
-    console.error('Error getting favorites:', error);
-    throw error;
+    throw new Error(`お気に入り取得エラー ${userId}: ${String(error)}`);
   }
 };
 
@@ -77,7 +75,6 @@ export const checkIsFavorite = async (userId: string, articleId: string): Promis
 
     return isFavorite;
   } catch (error) {
-    console.error('Error checking favorite status:', error);
-    throw error;
+    throw new Error(`お気に入り確認エラー ${userId}/${articleId}: ${String(error)}`);
   }
 };
