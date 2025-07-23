@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { usePlayerDetail } from '../../hooks/usePlayerDetail';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuthWithAdmin } from '../../hooks/useAuthWithAdmin';
 import { updatePlayerData } from '../../utils/playerService';
 import type { PlayerEditData, PlayerStats } from '../../types/player';
 import { StatCard } from '../common/StatCard';
@@ -19,7 +19,7 @@ export const defaultStats: PlayerStats = {
 export const PlayerDetail = () => {
   const { id } = useParams();
   const { player } = usePlayerDetail(id || '');
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading } = useAuthWithAdmin();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editData, setEditData] = useState<PlayerEditData>({
