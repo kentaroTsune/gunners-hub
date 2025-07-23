@@ -2,38 +2,40 @@ import { useState, useEffect } from 'react';
 import type { Player } from '../types/player';
 import { fetchPlayers } from '../services/players';
 
-export const usePlayers = () => {
+interface UsePlayersReturn {
+  players: Player[];
+  loading: boolean;
+  error: string | null;
+  refresh: () => Promise<void>;
+}
+
+export const usePlayers = (): UsePlayersReturn => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadPlayers = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchPlayers();
-        setPlayers(data);
-      } catch (err) {
-        setError(err as Error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPlayers();
-  }, []);
-
-  const refresh = async () => {
+  const loadPlayers = async (forceRefresh = false) => {
     try {
       setLoading(true);
-      const data = await fetchPlayers(true);
+      setError(null);
+      const data = await fetchPlayers(forceRefresh);
       setPlayers(data);
     } catch (err) {
-      setError(err as Error);
+      const errorMessage = `選手一覧取得エラー: ${String(err)}`;
+      setError(errorMessage);
+      setPlayers([]);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadPlayers();
+  }, []);
+
+  const refresh = async () => {
+    await loadPlayers(true);
+  };
+
   return { players, loading, error, refresh };
-}
+};
