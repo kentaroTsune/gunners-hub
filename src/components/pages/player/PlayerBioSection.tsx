@@ -1,8 +1,8 @@
-interface BioSectionProps {
+interface PlayerBioSectionProps {
   bio?: string;
 }
 
-export const BioSection = ({ bio }: BioSectionProps) => (
+export const PlayerBioSection = ({ bio }: PlayerBioSectionProps) => (
   <div className="mb-8">
     <h2 className="text-2xl font-bold mb-4">選手紹介</h2>
     {bio ? (

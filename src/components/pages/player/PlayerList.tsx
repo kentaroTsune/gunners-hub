@@ -1,6 +1,6 @@
-import { usePlayers } from '../../hooks/usePlayers';
-import { PlayerCard } from './PlayerCard';
-import { NavigationButton } from '../common/NavigationButton';
+import { usePlayers } from '../../../hooks/usePlayers';
+import { PlayerCard } from '../../common/Card/PlayerCard';
+import { NavigationButton } from '../../common/Button/NavigationButton';
 
 export const PlayerList = () => {
   const { players, loading, error } = usePlayers();

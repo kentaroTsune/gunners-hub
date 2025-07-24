@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import type { Article } from '../../types/article';
-import { useAuth } from '../../context/AuthContext';
-import { addFavorite, removeFavorite, checkIsFavorite } from '../../services/favorites';
-import { useNewsContext } from '../../context/NewsContext';
+import type { Article } from '../../../types/article';
+import { useAuth } from '../../../context/AuthContext';
+import { addFavorite, removeFavorite, checkIsFavorite } from '../../../services/favorites';
+import { useNewsContext } from '../../../context/NewsContext';
 
 interface FavoriteButtonProps {
   article: Article;

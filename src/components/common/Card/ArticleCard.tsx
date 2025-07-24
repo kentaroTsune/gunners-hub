@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import type { Article } from '../../types/article';
-import FavoriteButton from '../common/FavoriteButton';
+import type { Article } from '../../../types/article';
+import FavoriteButton from '../../common/Button/FavoriteButton';
 
 type ArticleCardProps = { article: Article };
 

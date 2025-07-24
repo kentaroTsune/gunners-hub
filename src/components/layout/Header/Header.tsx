@@ -1,7 +1,7 @@
-import { useNewsContext } from '../../context/NewsContext';
-import { useAuth } from '../../context/AuthContext';
+import { useNewsContext } from '../../../context/NewsContext';
+import { useAuth } from '../../../context/AuthContext';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { auth } from '../../../firebase';
 import { Link } from 'react-router-dom';
 
 const CATEGORIES = {
@@ -32,7 +32,7 @@ const Header = ({ hideActions = false }) => {
             <div className="lg:flex gap-3 hidden md:flex">
               <div className="flex gap-2 w-auto">
                 <Link
-                  to="/players"
+                  to="/player"
                   className="px-3 py-2 rounded transition-colors bg-white text-gray-800 hover:bg-gray-100"
                 >
                   選手一覧

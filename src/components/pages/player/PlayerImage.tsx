@@ -1,4 +1,4 @@
-import { getPlayerImageUrlWithFallback } from '../../utils/playerImage';
+import { getPlayerImageUrlWithFallback } from '../../../utils/playerImage';
 
 interface PlayerImageProps {
   playerId: string | null;

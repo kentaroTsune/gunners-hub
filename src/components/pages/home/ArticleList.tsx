@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNewsContext } from '../../context/NewsContext';
-import ArticleCard from './ArticleCard';
-import { useAuth } from '../../context/AuthContext';
+import { useNewsContext } from '../../../context/NewsContext';
+import ArticleCard from '../../common/Card/ArticleCard';
+import { useAuth } from '../../../context/AuthContext';
 
 const ArticleList = () => {
   const { articles, searchQuery } = useNewsContext();
 
-   // ログアウト時に強制的に再レンダリングさせる
+  // ログアウト時に強制的に再レンダリングさせる
   const [refreshKey, setRefreshKey] = useState(0);
   const { currentUser } = useAuth();
 

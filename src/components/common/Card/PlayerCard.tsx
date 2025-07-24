@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { getPlayerImageUrlWithFallback } from '../../utils/playerImage';
-import type { Player } from '../../types/player';
+import { getPlayerImageUrlWithFallback } from '../../../utils/playerImage';
+import type { Player } from '../../../types/player';
 
 export const PlayerCard = ({ player }: { player: Player }) => {
   return (
-    <Link to={`/players/${player.id}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity">
+    <Link to={`/player/${player.id}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity">
       {/* 画像部分*/}
       <img
         src={getPlayerImageUrlWithFallback(player.id)}

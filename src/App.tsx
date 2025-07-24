@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Header from './components/header/Header';
-import ArticleDetail from './components/main/ArticleDetail.tsx';
-import LoginPage from './components/auth/LoginPage';
-import './App.css';
+import Header from './components/layout/Header/Header.tsx';
+import Footer from './components/layout/Footer/Footer.tsx';
+import ArticleDetail from './components/pages/article/ArticleDetail';
+import HomePage from './components/pages/home/HomePage';
+import LoginPage from './components/pages/login/LoginPage';
+import { PlayerList } from './components/pages/player/PlayerList';
+import { PlayerDetail } from './components/pages/player/PlayerDetail';
 import { NewsProvider } from './context/NewsContext';
 import { AuthProvider } from './context/AuthContext';
-import Footer from './components/footer/Footer';
-import { PlayerList } from './components/player/PlayerList';
-import { PlayerDetail } from './components/player/PlayerDetail';
-import HomePage from './components/main/HomePage.tsx';
+import './App.css';
 
 const AppContent = () => {
   const location = useLocation();
@@ -19,10 +19,10 @@ const AppContent = () => {
       <main className="container mx-auto px-4 py-8 flex-grow">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/players" element={<PlayerList />} />
-          <Route path="/players/:id" element={<PlayerDetail />} />
+          <Route path="/article/:id" element={<ArticleDetail />} />
+          <Route path="/player" element={<PlayerList />} />
+          <Route path="/player/:id" element={<PlayerDetail />} />
         </Routes>
       </main>
       <Footer />
@@ -34,18 +34,12 @@ const App = () => {
   return (
     <AuthProvider>
       <NewsProvider>
-        <AppContent />
+        <Router>
+          <AppContent />
+        </Router>
       </NewsProvider>
     </AuthProvider>
   );
-}
+};
 
-const AppWrapper = () => {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
-}
-
-export default AppWrapper;
+export default App;

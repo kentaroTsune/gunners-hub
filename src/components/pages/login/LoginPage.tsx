@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../../firebase';
+import { auth, provider } from '../../../firebase';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {

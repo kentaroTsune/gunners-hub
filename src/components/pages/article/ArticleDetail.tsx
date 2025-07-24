@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { useNewsContext } from '../../context/NewsContext';
-import { NavigationButton } from '../common/NavigationButton';
+import { useNewsContext } from '../../../context/NewsContext';
+import { NavigationButton } from '../../common/Button/NavigationButton';
 
 const ArticleDetail = () => {
   const { id } = useParams();
