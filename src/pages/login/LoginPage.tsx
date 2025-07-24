@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../../../firebase';
+import { auth, provider } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
@@ -115,10 +115,6 @@ const LoginPage = () => {
             </>
           )}
         </button>
-
-        <footer className="mt-6 text-center text-sm text-gray-500">
-          <p>ログインすることで、利用規約に同意したものとみなします</p>
-        </footer>
       </div>
     </div>
   );

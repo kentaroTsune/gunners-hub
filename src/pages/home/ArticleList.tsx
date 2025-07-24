@@ -1,5 +1,5 @@
-import { useNewsContext } from '../../../context/NewsContext';
-import ArticleCard from '../../common/Card/ArticleCard';
+import { useNewsContext } from '../../context/NewsContext';
+import ArticleCard from '../../components/common/Card/ArticleCard';
 
 const ArticleList = () => {
   const { articles, searchQuery } = useNewsContext();
