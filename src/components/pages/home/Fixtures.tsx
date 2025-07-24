@@ -6,7 +6,6 @@ const Fixtures = () => {
       </h2>
       <ul className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <li className="grid grid-rows-subgrid row-span-3 gap-0 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-          {/* 日付・会場情報 */}
           <div className="p-4">
             <div className="grid grid-cols-2 gap-4 items-center">
               <div>
@@ -43,7 +42,6 @@ const Fixtures = () => {
           </div>
         </li>
         <li className="grid grid-rows-subgrid row-span-3 gap-0 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-          {/* 日付・会場情報 */}
           <div className="p-4">
             <div className="grid grid-cols-2 gap-4 items-center">
               <div>
@@ -80,7 +78,6 @@ const Fixtures = () => {
           </div>
         </li>
         <li className="grid grid-rows-subgrid row-span-3 gap-0 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-          {/* 日付・会場情報 */}
           <div className="p-4">
             <div className="grid grid-cols-2 gap-4 items-center">
               <div>
