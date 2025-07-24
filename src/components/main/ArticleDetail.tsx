@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useNewsContext } from '../../context/NewsContext';
-import { DetailButton } from '../common/DetailButton';
+import { NavigationButton } from '../common/NavigationButton';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -15,7 +15,7 @@ const ArticleDetail = () => {
   return (
     <article className="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
       <div className="flex justify-between items-start mb-6">
-        <DetailButton />
+        <NavigationButton text={'戻る'} />
       </div>
       <div className="flex items-center gap-4 mb-4">
         <h1 className="text-2xl font-bold">{article.title}</h1>

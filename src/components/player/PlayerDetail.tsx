@@ -5,7 +5,7 @@ import { useAuthWithAdmin } from '../../hooks/useAuthWithAdmin';
 import { updatePlayerData } from '../../utils/playerService';
 import type { PlayerEditData, PlayerStats } from '../../types/player';
 import { StatCard } from '../common/StatCard';
-import { DetailButton } from '../common/DetailButton';
+import { NavigationButton } from '../common/NavigationButton';
 import { BioSection } from './BioSection';
 import { PlayerInfoSection } from './PlayerInfoSection';
 import { PlayerImage } from './PlayerImage';
@@ -159,7 +159,7 @@ export const PlayerDetail = () => {
       </div>
       {/* 一覧ページに戻るボタン  */}
       <div className="mb-4">
-        <DetailButton />
+        <NavigationButton text={'戻る'} />
       </div>
       {/* 管理者のみ表示される編集コントロール */}
       {isAdmin && (
