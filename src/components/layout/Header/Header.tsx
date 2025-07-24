@@ -4,28 +4,62 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase';
 import { Link } from 'react-router-dom';
 
+interface HeaderProps {
+  hideActions?: boolean;
+}
+
 const CATEGORIES = {
   ALL: 'all',
   FAVORITES: 'favorites',
 } as const;
 
-const Header = ({ hideActions = false }) => {
+const Header = ({ hideActions = false }: HeaderProps) => {
   const { currentUser } = useAuth();
   const { setSearchQuery, setSelectedCategory, selectedCategory } = useNewsContext();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error(`ログアウトエラー: ${String(error)}`);
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const toggleCategory = () => {
+    const newCategory = selectedCategory === CATEGORIES.FAVORITES
+      ? CATEGORIES.ALL
+      : CATEGORIES.FAVORITES;
+    setSelectedCategory(newCategory);
+  }
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    if (img.src !== '/arsenal.png') {
+      img.src = '/arsenal.png';
+    }
+  };
 
   return (
     <header className="bg-red-600 text-white shadow-md">
       <div className="lg:container mx-auto px-4 py-4 flex flex-row items-center justify-between">
         <div className="flex items-center gap-3 w-[25rem]">
-          <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link
+            to="/"
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            aria-label="ホームページへ戻る"
+          >
             <img
               src="/arsenal.png"
-              alt="Arsenal FC"
+              alt="Arsenal FC ロゴ"
               className="h-10 w-auto object-contain"
-              aria-label="Arsenal FC Logo"
+              onError={handleImageError}
             />
             <h1 className="text-xl font-bold">The Gunners Hub</h1>
-          </a>
+          </Link>
         </div>
         {!hideActions && (
           <div className="flex flex-col-reverse lg:flex-row items-end gap-3 w-full md:w-auto">
@@ -41,7 +75,7 @@ const Header = ({ hideActions = false }) => {
               <div className="flex gap-2">
                 {currentUser && (
                 <button
-                  onClick={() => setSelectedCategory(selectedCategory === CATEGORIES.FAVORITES ? CATEGORIES.ALL : CATEGORIES.FAVORITES)}
+                  onClick={toggleCategory}
                   className={`px-3 py-2 rounded transition-colors ${
                     selectedCategory === CATEGORIES.FAVORITES
                       ? 'bg-red-700 text-white hover:bg-red-800'
@@ -56,7 +90,7 @@ const Header = ({ hideActions = false }) => {
               <input
                 type="text"
                 placeholder="記事を検索"
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="bg-white px-3 py-2 rounded text-gray-800 md:w-30"
                 aria-label="記事を検索"
               />
@@ -65,21 +99,23 @@ const Header = ({ hideActions = false }) => {
               {currentUser ? (
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => signOut(auth)}
+                    onClick={handleLogout}
                     className="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-100 transition-colors"
                   >
                     ログアウト
                   </button>
                   <img
                     src={currentUser.photoURL || '/arsenal.png'}
-                    alt="User"
+                    alt={`${currentUser.displayName || 'ユーザー'}のプロフィール画像`}
                     className="w-8 h-8 rounded-full"
+                    onError={handleImageError}
                   />
                 </div>
               ) : (
                 <Link
                   to="/login"
                   className="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-100 transition-colors ml-2"
+                  aria-label="ログインページへ"
                 >
                   ログイン
                 </Link>
