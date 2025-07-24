@@ -9,67 +9,64 @@ interface FavoriteButtonProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+const sizeClasses = {
+  sm: 'w-4 h-4',
+  md: 'w-6 h-6',
+  lg: 'w-8 h-8'
+} as const;
+
 const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) => {
   const { currentUser } = useAuth();
-  const { updateFavorites } = useNewsContext(); // トップレベルでフックを呼び出す
+  const { updateFavorites } = useNewsContext();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
-      if (currentUser && article?.article_id) {
-        try {
-          const favoriteStatus = await checkIsFavorite(currentUser.uid, article.article_id);
-          setIsFavorite(favoriteStatus);
-        } catch (error) {
-          console.error('お気に入り状態の確認に失敗しました:', error);
-        }
+      if (!currentUser?.uid || !article?.article_id) {
+        setIsFavorite(false);
+        return;
+      }
+
+      try {
+        const favoriteStatus = await checkIsFavorite(currentUser.uid, article.article_id);
+        setIsFavorite(favoriteStatus);
+      } catch (error) {
+        console.error(`お気に入り状態確認エラー ${currentUser.uid}/${article.article_id}: ${String(error)}`);
+        setIsFavorite(false);
       }
     };
+
     checkFavoriteStatus();
-  }, [currentUser, article?.article_id]);
+  }, [currentUser?.uid, article?.article_id]);
 
   const handleClick = async () => {
     if (!currentUser) {
       window.location.href = '/login';
       return;
     }
-    if (!article?.article_id || isProcessing) {
-      return;
-    }
 
+    if (!article?.article_id || isProcessing) return;
+
+    const newFavoriteStatus = !isFavorite;
     setIsProcessing(true);
-    try {
-      const newFavoriteStatus = !isFavorite;
-      setIsFavorite(newFavoriteStatus);
+    setIsFavorite(newFavoriteStatus);
 
+    try {
       if (newFavoriteStatus) {
         await addFavorite(currentUser.uid, article);
       } else {
         await removeFavorite(currentUser.uid, article.article_id);
       }
 
-      const updatedStatus = await checkIsFavorite(currentUser.uid, article.article_id);
-      setIsFavorite(updatedStatus);
-      await updateFavorites(); // コンポーネント外で取得したフックを使用
-
+      await updateFavorites();
     } catch (error) {
-      console.error('お気に入り操作に失敗しました:', {
-        error,
-        articleId: article?.article_id,
-        userId: currentUser?.uid
-      });
-      setIsFavorite(prev => !prev); // 状態を元に戻す
+      setIsFavorite(!newFavoriteStatus);
+      throw new Error(`お気に入り操作エラー ${currentUser.uid}/${article.article_id}: ${String(error)}`);
     } finally {
       setIsProcessing(false);
     }
   };
-
-  const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8'
-  } as const;
 
   return (
     <button
