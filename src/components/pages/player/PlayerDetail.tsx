@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { usePlayerDetail } from '../../../hooks/usePlayerDetail';
 import { useAuthWithAdmin } from '../../../hooks/useAuthWithAdmin';
 import { updatePlayerData } from '../../../utils/playerService';
@@ -17,11 +17,10 @@ export const defaultStats: PlayerStats = {
 };
 
 export const PlayerDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { player } = usePlayerDetail(id || '');
-  const { user, isAdmin, loading } = useAuthWithAdmin();
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const { isAdmin } = useAuthWithAdmin();
+  const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState<PlayerEditData>({
     name: '',
     position: '',
@@ -29,20 +28,12 @@ export const PlayerDetail = () => {
     bio: '',
     stats: defaultStats
   });
-  const [originalData, setOriginalData] = useState<PlayerEditData>({
-    name: '',
-    position: '',
-    nationality: '',
-    image: '',
-    bio: '',
-    stats: defaultStats
-  });
-  const [saving, setSaving] = useState<boolean>(false);
+  const [saving, setSaving] = useState(false);
 
-  const handleEditStart = (): void => {
-    if (!player) return;
+  const initializeEditData = useMemo(() => {
+    if (!player) return editData;
 
-    const editableData: PlayerEditData = {
+    return {
       name: player.name,
       position: player.position,
       nationality: player.nationality,
@@ -50,18 +41,21 @@ export const PlayerDetail = () => {
       bio: player.bio || '',
       stats: player.stats || defaultStats
     }
+  }, [player]);
 
-    setOriginalData(editableData);
-    setEditData(editableData);
+  const handleEditStart = () => {
+    if (!player) return;
+
+    setEditData(initializeEditData);
     setIsEditing(true);
   }
 
-  const handleEditCancel = (): void => {
-    setEditData(originalData);
+  const handleEditCancel = () => {
+    setEditData(initializeEditData);
     setIsEditing(false);
   }
 
-  const handleEditDataChange = (field: keyof PlayerEditData, value: string): void => {
+  const handleEditDataChange = (field: keyof PlayerEditData, value: string) => {
     if (field === 'image') return;
 
     setEditData(prev => ({
@@ -70,8 +64,8 @@ export const PlayerDetail = () => {
     }));
   }
 
-  const handleStatsChange = (statField: keyof PlayerStats, value: string): void => {
-    const numValue = parseInt(value) || 0;
+  const handleStatsChange = (statField: keyof PlayerStats, value: string) => {
+    const numValue = Math.max(0, parseInt(value) || 0);
 
     setEditData(prev => ({
       ...prev,
@@ -79,24 +73,28 @@ export const PlayerDetail = () => {
         ...prev.stats,
         [statField]: numValue
       }
-    }));;
+    }));
   };
 
-  const handleSave = async (): Promise<void> => {
+  const hasChanges = useMemo(() => {
+    const original = initializeEditData;
+
+    return (
+      editData.name !== original.name ||
+      editData.position !== original.position ||
+      editData.nationality !== original.nationality ||
+      editData.bio !== original.bio ||
+      editData.stats.appearances !== original.stats.appearances ||
+      editData.stats.goals !== original.stats.goals ||
+      editData.stats.assists !== original.stats.assists
+    );
+  }, [editData, initializeEditData]);
+
+  const handleSave = async () => {
     if (!player?.id) {
       alert("選手情報が取得できません")
       return;
     }
-
-    // 既存データから変更があるかチェック
-    const hasChanges =
-      editData.name !== originalData.name ||
-      editData.position !== originalData.position ||
-      editData.nationality !== originalData.nationality ||
-      editData.bio !== originalData.bio ||
-      editData.stats.appearances !== originalData.stats.appearances ||
-      editData.stats.goals !== originalData.stats.goals ||
-      editData.stats.assists !== originalData.stats.assists;
 
     if (!hasChanges) {
       alert("変更がありません");
@@ -105,17 +103,12 @@ export const PlayerDetail = () => {
 
     try {
       setSaving(true);
-
-      // Firestore更新
       await updatePlayerData(player.id, editData);
-
-      setOriginalData(editData);
       setIsEditing(false);
-
       alert("保存しました！");
       window.location.reload();
     } catch (error) {
-      console.error('保存エラー:', error);
+      console.error(`選手データ更新エラー ${player.id}: ${String(error)}`);
       alert('保存に失敗しました。もう一度お試しください。');
     } finally {
       setSaving(false);
@@ -124,44 +117,10 @@ export const PlayerDetail = () => {
 
   return (
     <>
-      {/* デバッグ */}
-      <div style={{
-        position: 'fixed',
-        bottom: '10px',
-        left: '10px',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        background: '#f0f0f0',
-        width: '300px',
-        padding: '10px',
-        fontSize: '12px',
-        zIndex: 1000
-      }}>
-        <p>ログイン: {user ? '済' : '未'}</p>
-        <p>ユーザーUID: {user?.uid || 'なし'}</p>
-        <p>メール: {user?.email || 'なし'}</p>
-        <p>管理者: {isAdmin ? 'YES' : 'NO'}</p>
-        <p>認証ローディング: {loading ? 'YES' : 'NO'}</p>
-        <p>編集モード: {isEditing ? 'ON' : 'OFF'}</p>
-        <p>保存中: {saving ? 'YES' : 'NO'}</p>
-        {isEditing && (
-          <div style={{ marginTop: '10px', borderTop: '1px solid #ccc', paddingTop: '10px' }}>
-            <p><strong>編集中データ:</strong></p>
-            <p>名前: {editData.name}</p>
-            <p>ポジション: {editData.position}</p>
-            <p>国籍: {editData.nationality}</p>
-            <p>選手紹介: {editData.bio ? `${editData.bio.substring(0, 15)}...` : '未入力'}</p>
-            <p>出場: {editData.stats.appearances}</p>
-            <p>ゴール: {editData.stats.goals}</p>
-            <p>アシスト: {editData.stats.assists}</p>
-          </div>
-        )}
-      </div>
-      {/* 一覧ページに戻るボタン  */}
       <div className="mb-4">
         <NavigationButton text={'戻る'} />
       </div>
-      {/* 管理者のみ表示される編集コントロール */}
+      {/* 管理者のみ表示される編集機能 */}
       {isAdmin && (
         <div className="bg-red-300 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
@@ -172,6 +131,7 @@ export const PlayerDetail = () => {
               <button
                 onClick={handleEditStart}
                 className="px-3 py-2 rounded bg-white text-gray-800 hover:bg-gray-100"
+                aria-label="選手情報の編集を開始"
               >
                 編集開始
               </button>
@@ -179,14 +139,21 @@ export const PlayerDetail = () => {
               <div className="space-x-2">
                 <button
                   onClick={handleSave}
-                  disabled={saving}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                  disabled={saving || !hasChanges}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    saving || !hasChanges
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-green-600 hover:bg-green-700'
+                  } text-white`}
+                  aria-label="変更を保存"
                 >
-                  {saving ? "保存中..." : "保存" }
+                  {saving ? "保存中..." : "保存"}
                 </button>
                 <button
                   onClick={handleEditCancel}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                  disabled={saving}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
+                  aria-label="編集をキャンセル"
                 >
                   キャンセル
                 </button>
@@ -195,7 +162,7 @@ export const PlayerDetail = () => {
           </div>
         </div>
       )}
-      {/* 編集モード時の簡易テスト用入力フィールド */}
+      {/* 編集モード時入力フィールド */}
       {isEditing && (
         <div className="mt-4 space-y-3">
           <div>
@@ -203,11 +170,12 @@ export const PlayerDetail = () => {
               選手名
             </label>
             <input
+              id="name"
               type="text"
               value={editData.name}
               onChange={(e) => handleEditDataChange('name', e.target.value)}
               disabled={saving}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100"
             />
           </div>
           <div>
@@ -215,11 +183,12 @@ export const PlayerDetail = () => {
               ポジション
             </label>
             <input
+              id="position"
               type="text"
               value={editData.position}
               onChange={(e) => handleEditDataChange('position', e.target.value)}
               disabled={saving}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100"
             />
           </div>
           <div>
@@ -227,11 +196,12 @@ export const PlayerDetail = () => {
               国籍
             </label>
             <input
+              id="nationality"
               type="text"
               value={editData.nationality}
               onChange={(e) => handleEditDataChange('nationality', e.target.value)}
               disabled={saving}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100"
             />
           </div>
           <div>
@@ -239,10 +209,12 @@ export const PlayerDetail = () => {
               選手紹介
             </label>
             <textarea
+              id="bio"
               value={editData.bio}
               onChange={(e) => handleEditDataChange('bio', e.target.value)}
               disabled={saving}
-              className="w-full h-80 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={6}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100"
               placeholder="選手の経歴やプロフィールを入力..."
             />
           </div>
@@ -256,12 +228,13 @@ export const PlayerDetail = () => {
                   試合出場数
                 </label>
                 <input
+                  id="appearances"
                   type="number"
                   min="0"
                   value={editData.stats.appearances}
                   onChange={(e) => handleStatsChange('appearances', e.target.value)}
                   disabled={saving}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100"
                 />
               </div>
               <div>
@@ -269,12 +242,13 @@ export const PlayerDetail = () => {
                   得点数
                 </label>
                 <input
+                  id="goals"
                   type="number"
                   min="0"
                   value={editData.stats.goals}
                   onChange={(e) => handleStatsChange('goals', e.target.value)}
                   disabled={saving}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100"
                 />
               </div>
               <div>
@@ -282,12 +256,13 @@ export const PlayerDetail = () => {
                   アシスト数
                 </label>
                 <input
+                  id="assists"
                   type="number"
                   min="0"
                   value={editData.stats.assists}
                   onChange={(e) => handleStatsChange('assists', e.target.value)}
                   disabled={saving}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-100"
                 />
               </div>
             </div>
@@ -296,22 +271,37 @@ export const PlayerDetail = () => {
       )}
       {/* 実際の表示フィールド */}
       {!isEditing && (
-        <>
-          {/* 基本情報 */}
-          <PlayerInfoSection name={player?.name} position={player?.position} nationality={player?.nationality} />
-          <PlayerImage playerId={player?.id} name={player?.name} className="w-32 h-32 rounded-full" />
-          {/* スタッツ */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">今シーズンのスタッツ</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-              <StatCard title="出場試合数" value={player?.stats?.appearances ?? defaultStats.appearances} />
-              <StatCard title="得点" value={player?.stats?.goals ?? defaultStats.goals} />
-              <StatCard title="アシスト" value={player?.stats?.assists ?? defaultStats.assists} />
-            </div>
+        <div className="space-y-8">
+          <PlayerInfoSection
+            name={player?.name}
+            position={player?.position}
+            nationality={player?.nationality}
+          />
+          <div className="flex justify-center">
+            <PlayerImage
+              playerId={player?.id}
+              name={player?.name}
+            />
           </div>
-          {/* Bioセクション */}
+          <section aria-label="選手スタッツ">
+            <h2 className="text-2xl font-bold mb-4">今シーズンのスタッツ</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <StatCard
+                title="出場試合数"
+                value={player?.stats?.appearances ?? defaultStats.appearances}
+              />
+              <StatCard
+                title="得点"
+                value={player?.stats?.goals ?? defaultStats.goals}
+              />
+              <StatCard
+                title="アシスト"
+                value={player?.stats?.assists ?? defaultStats.assists}
+              />
+            </div>
+          </section>
           <PlayerBioSection bio={player?.bio} />
-        </>
+        </div>
       )}
     </>
   );
