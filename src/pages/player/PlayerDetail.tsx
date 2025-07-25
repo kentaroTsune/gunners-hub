@@ -7,7 +7,7 @@ import type { PlayerEditData, PlayerStats } from '../../types/player';
 import { StatCard } from '../../components/common/Card/StatCard';
 import { NavigationButton } from '../../components/common/Button/NavigationButton';
 import { PlayerBioSection } from './PlayerBioSection';
-import { PlayerInfoSection } from './PlayerInfoSection';
+import { PlayerInfo } from './PlayerInfo';
 import { PlayerImage } from './PlayerImage';
 
 export const defaultStats: PlayerStats = {
@@ -272,7 +272,7 @@ export const PlayerDetail = () => {
       {/* 実際の表示フィールド */}
       {!isEditing && (
         <div className="space-y-8">
-          <PlayerInfoSection
+          <PlayerInfo
             name={player?.name}
             position={player?.position}
             nationality={player?.nationality}
