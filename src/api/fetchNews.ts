@@ -43,7 +43,7 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
   } = import.meta.env;
 
   if (!endpoint || !apikey || !qInTitle || !rawLang || !category) {
-    throw new Error('Required environment variables are missing for news API');
+    throw new Error('ニュースAPIに必要な環境変数が不足しています');
   }
 
   const params = new URLSearchParams({
@@ -58,13 +58,13 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
+    throw new Error(`HTTPエラー ステータス: ${res.status}`);
   }
 
   const data = await res.json();
 
   if (!data.results || !Array.isArray(data.results)) {
-    throw new Error('Invalid API response format');
+    throw new Error('無効なAPIレスポンス形式');
   }
 
   // dataをArticle型に変換
@@ -74,7 +74,7 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
       try {
         translatedTitle = await translateText(item.title);
       } catch (error) {
-        throw new Error(`translation error: ${String(error)}`);
+        throw new Error(`翻訳エラー: ${String(error)}`);
       }
 
       return {

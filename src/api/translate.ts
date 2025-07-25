@@ -35,17 +35,17 @@ export const translateText = async (text: string): Promise<string> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Translation API failed: ${response.status} ${response.statusText}`);
+      throw new Error(`翻訳APIが失敗しました: ${response.status} ${response.statusText}`);
     }
 
     const data: TranslationResponse = await response.json();
 
     if (!data.translations || !Array.isArray(data.translations) || data.translations.length === 0) {
-      throw new Error('Invalid translation response format');
+      throw new Error('無効な翻訳レスポンス形式です');
     }
 
     return data.translations[0].text;
   } catch (error) {
-    throw new Error(`Translation error: "${text.slice(0, 20)}...": ${String(error)}`);
+    throw new Error(`翻訳エラー: "${text.slice(0, 20)}...": ${String(error)}`);
   }
 };
