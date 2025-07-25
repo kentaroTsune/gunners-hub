@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 interface NewsContextType {
   articles: Article[];
   favorites: string[];
+  loading: boolean;
   setArticles: (articles: Article[]) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -21,6 +22,7 @@ const NewsContext = createContext<NewsContextType | undefined>(undefined);
 export const NewsProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser } = useAuth();
   const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -61,6 +63,7 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const data = await fetchNews();
         setArticles(data);
 
@@ -70,6 +73,8 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error(`ニュース取得エラー: ${String(error)}`);
         setArticles([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -99,6 +104,7 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
       value={{
         articles: filteredArticles,
         favorites,
+        loading,
         setArticles,
         searchQuery,
         setSearchQuery,
