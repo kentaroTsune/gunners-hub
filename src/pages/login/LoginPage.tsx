@@ -4,7 +4,7 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+export const LoginPage = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -120,4 +120,3 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;

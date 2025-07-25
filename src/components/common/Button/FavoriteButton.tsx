@@ -15,7 +15,7 @@ const sizeClasses = {
   lg: 'w-8 h-8'
 } as const;
 
-const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) => {
+export const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) => {
   const { currentUser } = useAuth();
   const { updateFavorites } = useNewsContext();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -95,5 +95,3 @@ const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) => {
     </button>
   );
 };
-
-export default FavoriteButton;

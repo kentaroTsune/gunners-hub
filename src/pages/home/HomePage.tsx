@@ -1,8 +1,8 @@
-import ArticleList from './ArticleList'
-import Fixtures from './Fixtures'
-import History from './History'
+import { ArticleList } from './ArticleList'
+import { Fixtures } from './Fixtures'
+import { History } from './History'
 
-const HomePage = () => {
+export const HomePage = () => {
   return (
     <>
       <section aria-label="記事一覧">
@@ -17,5 +17,3 @@ const HomePage = () => {
     </>
   )
 }
-
-export default HomePage

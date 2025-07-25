@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 
 const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
 
-const ArticleDetail = () => {
+export const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { articles } = useNewsContext();
 
@@ -94,5 +94,3 @@ const ArticleDetail = () => {
     </article>
   );
 };
-
-export default ArticleDetail;

@@ -13,7 +13,7 @@ const CATEGORIES = {
   FAVORITES: 'favorites',
 } as const;
 
-const Header = ({ hideActions = false }: HeaderProps) => {
+export const Header = ({ hideActions = false }: HeaderProps) => {
   const { currentUser } = useAuth();
   const { setSearchQuery, setSelectedCategory, selectedCategory } = useNewsContext();
 
@@ -127,5 +127,3 @@ const Header = ({ hideActions = false }: HeaderProps) => {
     </header>
   );
 };
-
-export default Header;

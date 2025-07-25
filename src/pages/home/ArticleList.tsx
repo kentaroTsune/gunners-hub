@@ -1,7 +1,7 @@
 import { useNewsContext } from '../../context/NewsContext';
-import ArticleCard from '../../components/common/Card/ArticleCard';
+import { ArticleCard } from '../../components/common/Card/ArticleCard';
 
-const ArticleList = () => {
+export const ArticleList = () => {
   const { articles, searchQuery } = useNewsContext();
 
   return (
@@ -25,4 +25,3 @@ const ArticleList = () => {
   );
 };
 
-export default ArticleList;

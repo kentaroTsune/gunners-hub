@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Article } from '../../../types/article';
-import FavoriteButton from '../../common/Button/FavoriteButton';
+import { FavoriteButton } from '../../common/Button/FavoriteButton';
 import { useMemo } from 'react';
 
 interface ArticleCardProps {
@@ -9,7 +9,7 @@ interface ArticleCardProps {
 
 const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
 
-const ArticleCard = ({ article }: ArticleCardProps) => {
+export const ArticleCard = ({ article }: ArticleCardProps) => {
   const safeImageUrl = useMemo(() => {
     if (!article.image_url) return DUMMY_IMAGE;
 
@@ -69,5 +69,3 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
     </article>
   );
 };
-
-export default ArticleCard;

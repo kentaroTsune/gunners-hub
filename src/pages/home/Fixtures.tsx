@@ -1,4 +1,4 @@
-const Fixtures = () => {
+export const Fixtures = () => {
   return (
     <div className="space-y-6 py-8">
       <h2 className="text-3xl font-bold text-gray-800">
@@ -117,5 +117,3 @@ const Fixtures = () => {
     </div>
   )
 }
-
-export default Fixtures
