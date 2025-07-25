@@ -10,7 +10,7 @@ export const ArticleList = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {loading ? (
           <div className="col-span-full text-center py-12">
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex items-center justify-center gap-4">
               <div className="animate-spin h-8 w-8 border-4 border-red-600 border-t-transparent rounded-full"></div>
               <p className="text-gray-600">最新記事を読み込み中...</p>
             </div>

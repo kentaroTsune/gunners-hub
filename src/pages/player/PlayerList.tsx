@@ -7,8 +7,9 @@ export const PlayerList = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <div className="text-gray-600">選手データを読み込み中...</div>
+      <div className="flex justify-center items-center gap-1 min-h-64">
+        <div className="animate-spin h-8 w-8 border-4 border-red-600 border-t-transparent rounded-full"></div>
+        <p className="text-gray-600">選手データを読み込み中...</p>
       </div>
     );
   }
