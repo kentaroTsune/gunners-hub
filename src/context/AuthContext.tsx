@@ -37,8 +37,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 }
 
-export const useAuth = (): AuthContextType => {
+export const useAuthContext = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) throw new Error('useAuthはAuthProvider内で使用してください');
+  if (context === undefined) throw new Error('useAuthContextはAuthProvider内で使用してください');
   return context;
 };

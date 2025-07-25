@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import type { User, UseAuthReturn } from '../types/auth';
-import { useAuth as useAuthContext } from '../context/AuthContext';
+import { useAuthContext } from '../context/AuthContext';
 
 export const useAuthWithAdmin = (): UseAuthReturn => {
   const { currentUser, loading: authLoading } = useAuthContext();

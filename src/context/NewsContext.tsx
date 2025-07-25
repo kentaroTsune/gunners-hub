@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { Article } from '../types/article';
 import { fetchNews } from '../api/fetchNews';
 import { getFavorites } from '../services/favorites';
-import { useAuth } from '../context/AuthContext';
+import { useAuthContext } from '../context/AuthContext';
 
 interface NewsContextType {
   articles: Article[];
@@ -20,7 +20,7 @@ interface NewsContextType {
 const NewsContext = createContext<NewsContextType | undefined>(undefined);
 
 export const NewsProvider = ({ children }: { children: ReactNode }) => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuthContext();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');

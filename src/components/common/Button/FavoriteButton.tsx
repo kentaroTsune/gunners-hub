@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Article } from '../../../types/article';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuthContext } from '../../../context/AuthContext';
 import { addFavorite, removeFavorite, checkIsFavorite } from '../../../services/favorites';
 import { useNewsContext } from '../../../context/NewsContext';
 
@@ -16,7 +16,7 @@ const sizeClasses = {
 } as const;
 
 export const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuthContext();
   const { updateFavorites } = useNewsContext();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuthContext } from '../../context/AuthContext';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuthContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
