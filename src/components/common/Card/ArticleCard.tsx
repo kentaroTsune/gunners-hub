@@ -38,13 +38,15 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
 
   return (
     <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-      <img
-        src={safeImageUrl}
-        alt={article.translatedTitle || article.title}
-        className="w-full md:h-50 object-cover"
-        loading="lazy"
-        onError={handleImageError}
-      />
+      <figure>
+        <img
+          src={safeImageUrl}
+          alt={article.translatedTitle || article.title}
+          className="w-full md:h-50 object-cover"
+          loading="lazy"
+          onError={handleImageError}
+        />
+      </figure>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <span className="text-sm text-gray-500">

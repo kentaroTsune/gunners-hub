@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Header } from './components/layout/Header/Header.tsx';
 import { Footer } from './components/layout/Footer/Footer.tsx';
 import { ArticleDetail } from './pages/article/ArticleDetail';
-import HomePage from './pages/home/HomePage';
+import { HomePage } from './pages/home/HomePage';
 import { LoginPage } from './pages/login/LoginPage';
 import { PlayerList } from './pages/player/PlayerList';
 import { PlayerDetail } from './pages/player/PlayerDetail';

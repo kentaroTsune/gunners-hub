@@ -22,13 +22,15 @@ export const PlayerCard = ({ player }: PlayerCardProps) => {
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity"
       aria-label={`選手 ${player.name} の詳細ページへ`}
     >
-      <img
-        src={getPlayerImageUrlWithFallback(player.id)}
-        alt={`${player.name}の写真`}
-        className="w-full md:h-80 lg:h-50 object-cover"
-        loading="lazy"
-        onError={handleImageError}
-      />
+      <figure>
+        <img
+          src={getPlayerImageUrlWithFallback(player.id)}
+          alt={`${player.name}の写真`}
+          className="w-full md:h-80 lg:h-50 object-cover"
+          loading="lazy"
+          onError={handleImageError}
+        />
+      </figure>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <span className="text-sm text-gray-500">

@@ -52,12 +52,14 @@ export const Header = ({ hideActions = false }: HeaderProps) => {
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
             aria-label="ホームページへ戻る"
           >
-            <img
-              src="/arsenal.png"
-              alt="Arsenal FC ロゴ"
-              className="h-10 w-auto object-contain"
-              onError={handleImageError}
-            />
+            <figure>
+              <img
+                src="/arsenal.png"
+                alt="Arsenal FC ロゴ"
+                className="h-10 w-auto object-contain"
+                onError={handleImageError}
+              />
+            </figure>
             <h1 className="text-xl font-bold">The Gunners Hub</h1>
           </Link>
         </div>
@@ -104,12 +106,14 @@ export const Header = ({ hideActions = false }: HeaderProps) => {
                   >
                     ログアウト
                   </button>
-                  <img
-                    src={currentUser.photoURL || '/arsenal.png'}
-                    alt={`${currentUser.displayName || 'ユーザー'}のプロフィール画像`}
-                    className="w-8 h-8 rounded-full"
-                    onError={handleImageError}
-                  />
+                  <figure>
+                    <img
+                      src={currentUser.photoURL || '/arsenal.png'}
+                      alt={`${currentUser.displayName || 'ユーザー'}のプロフィール画像`}
+                      className="w-8 h-8 rounded-full"
+                      onError={handleImageError}
+                    />
+                  </figure>
                 </div>
               ) : (
                 <Link

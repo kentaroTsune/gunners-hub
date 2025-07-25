@@ -7,13 +7,13 @@ export const History = () => {
       <ul className="grid grid-cols-1 lg:grid-cols-12 grid-rows-none lg:grid-rows-[repeat(3,400px)] gap-6">
         <li className="lg:col-span-12 row-span-1 relative overflow-hidden rounded-xl group">
           <div className="flex flex-col lg:flex-row h-full">
-            <div className="flex-1 relative overflow-hidden">
+            <figure className="flex-1 relative overflow-hidden">
               <img
                 src="/src/assets/img/history/foundations.jpg"
                 alt="アーセナルの基盤"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-            </div>
+            </figure>
             <div className="lg:flex-1 bg-white p-6 lg:flex lg:flex-col lg:justify-center">
               <h3 className="text-lg lg:text-3xl font-bold mb-1 lg:mb-4">アーセナルの基盤</h3>
               <p className="text-l text-justify leading-relaxed">
@@ -24,13 +24,13 @@ export const History = () => {
         </li>
         <li className="lg:col-span-6 row-span-1 relative overflow-hidden rounded-xl group">
           <div className="flex flex-col h-full">
-            <div className="flex-1 relative overflow-hidden">
+            <figure className="flex-1 relative overflow-hidden">
               <img
                 src="/src/assets/img/history/chapman_herbert.jpg"
                 alt="ハーバート・チャップマン"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-            </div>
+            </figure>
             <div className="bg-white p-6">
               <h3 className="text-lg font-bold mb-1">ハーバート・チャップマン - 偉大な革新者</h3>
               <p className="text-justify leading-relaxed">1925年の夏、ヘンリー・ノリスがアーセナルに新しい監督が必要だと判断した際、彼は次の任命がもたらす影響を予想だにしなかった。</p>
@@ -39,13 +39,13 @@ export const History = () => {
         </li>
         <li className="lg:col-span-6 lg:row-span-2 order-last lg:order-none relative overflow-hidden rounded-xl group">
           <div className="flex flex-col h-full">
-            <div className="flex-1 relative overflow-hidden">
+            <figure className="flex-1 relative overflow-hidden">
               <img
                 src="/src/assets/img/history/wenger.jpg"
                 alt="アーセン・ベンゲル"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-            </div>
+            </figure>
             <div className="bg-white p-6">
               <h3 className="text-lg lg:text-xl font-bold mb-2">アーセン・ベンゲルの時代</h3>
               <p className="text-justify leading-relaxed">
@@ -56,13 +56,13 @@ export const History = () => {
         </li>
         <li className="lg:col-span-6 row-span-1 relative overflow-hidden rounded-xl group">
           <div className="flex flex-col h-full">
-            <div className="flex-1 relative overflow-hidden">
+            <figure className="flex-1 relative overflow-hidden">
               <img
                 src="/src/assets/img/history/graham.jpg"
                 alt="グラハム"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-            </div>
+            </figure>
             <div className="bg-white p-6">
               <h3 className="text-lg lg:text-xl font-bold mb-2">グラハムの黄金時代</h3>
               <p className="text-justify leading-relaxed">
