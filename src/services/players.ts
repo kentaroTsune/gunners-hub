@@ -1,6 +1,6 @@
 import { getCachedPlayers, setCachedPlayers } from '../utils/cache';
 import type { Player } from '../types/player';
-import { translateText } from '../api/translate';
+import { translateText } from '../api/fetchTranslate';
 
 interface FootballApiResponse {
   squad: Array<{

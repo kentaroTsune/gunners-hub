@@ -1,4 +1,4 @@
-import { translateText } from './translate';
+import { translateText } from './fetchTranslate';
 import { getCachedArticles, setCachedArticles } from '../utils/cache';
 import type { Article } from '../types/article';
 
