@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
-import type { User, UseAuthReturn } from '../types/auth';
+import { checkUserIsAdmin } from "../repositories/adminRepository";
+import { transformFirebaseUserToUser } from "../utils/userTransformer";
+import type { UseAuthReturn } from '../types/auth';
 import { useAuthContext } from '../context/AuthContext';
 
 export const useAuthWithAdmin = (): UseAuthReturn => {
@@ -13,16 +13,17 @@ export const useAuthWithAdmin = (): UseAuthReturn => {
     const checkAdminStatus = async () => {
       if (!currentUser) {
         setIsAdmin(false);
+        setAdminLoading(false);
         return;
       }
 
       setAdminLoading(true);
       try {
-        const adminDoc = await getDoc(doc(db, 'admins', currentUser.uid));
-        setIsAdmin(adminDoc.exists());
+        const adminStatus = await checkUserIsAdmin(currentUser.uid);
+        setIsAdmin(adminStatus);
       } catch (error) {
         setIsAdmin(false);
-        throw new Error(`管理者権限確認エラー ${currentUser.uid}: ${String(error)}`);
+        console.error(error);
       } finally {
         setAdminLoading(false);
       }
@@ -31,15 +32,11 @@ export const useAuthWithAdmin = (): UseAuthReturn => {
     checkAdminStatus();
   }, [currentUser]);
 
-  const user: User | null = currentUser ? {
-    uid: currentUser.uid,
-    email: currentUser.email,
-    displayName: currentUser.displayName
-  } : null;
+  const user = transformFirebaseUserToUser(currentUser);
 
   return {
     user,
     isAdmin,
     loading: authLoading || adminLoading
   };
-}
+};
