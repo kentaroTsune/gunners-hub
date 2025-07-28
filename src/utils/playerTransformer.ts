@@ -1,5 +1,5 @@
 import { translateText } from '../api/fetchTranslate';
-import type { FootballApiResponse, Player } from '../types/player';
+import type { FootballApiResponse, Player, PlayerEditData } from '../types/player';
 
 
 interface RawPlayer {
@@ -43,4 +43,9 @@ const transformRawPlayersToPlayers = async (rawPlayers: RawPlayer[]): Promise<Pl
 export const transformFootballApiToPlayers = async (data: FootballApiResponse): Promise<Player[]> => {
   const rawPlayers = transformApiResponseToRawPlayers(data);
   return await transformRawPlayersToPlayers(rawPlayers);
+};
+
+export const extractEditableFields = (editData: PlayerEditData): Partial<PlayerEditData> => {
+  const { image, ...editableFields } = editData;
+  return editableFields;
 };

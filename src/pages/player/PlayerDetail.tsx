@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { usePlayerDetail } from '../../hooks/usePlayerDetail';
 import { useAuthWithAdmin } from '../../hooks/useAuthWithAdmin';
-import { updatePlayerData } from '../../utils/playerService';
+import { updatePlayerData } from '../../repositories/playerRepository';
 import type { PlayerEditData, PlayerStats } from '../../types/player';
 import { StatCard } from '../../components/common/Card/StatCard';
 import { NavigationButton } from '../../components/common/Button/NavigationButton';
