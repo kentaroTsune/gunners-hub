@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { Article } from '../types/article';
 import { fetchNews } from '../api/fetchNews';
-import { getFavorites } from '../services/favorites';
+import { findFavoritesByUser } from '../repositories/favoriteRepository';
 import { useAuthContext } from '../context/AuthContext';
 
 interface NewsContextType {
@@ -44,7 +44,7 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      const userFavorites = await getFavorites(currentUser.uid);
+      const userFavorites = await findFavoritesByUser(currentUser.uid);
       const favoriteIds = userFavorites.map(fav => fav.articleId);
       setFavorites(favoriteIds);
 

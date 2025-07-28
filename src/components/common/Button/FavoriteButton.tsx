@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Article } from '../../../types/article';
 import { useAuthContext } from '../../../context/AuthContext';
-import { addFavorite, removeFavorite, checkIsFavorite } from '../../../services/favorites';
+import { createFavorite, deleteFavorite, findFavoriteByUserAndArticle } from '../../../repositories/favoriteRepository';
 import { useNewsContext } from '../../../context/NewsContext';
 
 interface FavoriteButtonProps {
@@ -29,7 +29,7 @@ export const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) =>
       }
 
       try {
-        const favoriteStatus = await checkIsFavorite(currentUser.uid, article.article_id);
+        const favoriteStatus = await findFavoriteByUserAndArticle(currentUser.uid, article.article_id);
         setIsFavorite(favoriteStatus);
       } catch (error) {
         console.error(`お気に入り状態確認エラー ${currentUser.uid}/${article.article_id}: ${String(error)}`);
@@ -54,9 +54,9 @@ export const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) =>
 
     try {
       if (newFavoriteStatus) {
-        await addFavorite(currentUser.uid, article);
+        await createFavorite(currentUser.uid, article);
       } else {
-        await removeFavorite(currentUser.uid, article.article_id);
+        await deleteFavorite(currentUser.uid, article.article_id);
       }
 
       await updateFavorites();

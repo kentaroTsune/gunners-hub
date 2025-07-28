@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchFirestorePlayer } from '../services/firestorePlayers';
+import { fetchFirestorePlayer } from '../repositories/playerRepository';
 import type { Player } from '../types/player';
 
 interface UsePlayerDetailReturn {

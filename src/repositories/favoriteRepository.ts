@@ -1,17 +1,17 @@
-import { db } from '../firebase';
 import { collection, addDoc, deleteDoc, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
 import type { Article } from '../types/article';
 
 const FAVORITES_COLLECTION = 'favorites';
 
-interface FavoriteArticle {
+export interface FavoriteDocument {
   userId: string;
   articleId: string;
   addedAt: Date;
   articleData: Article;
 }
 
-export const addFavorite = async (userId: string, article: Article): Promise<void> => {
+export const createFavorite = async (userId: string, article: Article): Promise<void> => {
   try {
     await addDoc(collection(db, FAVORITES_COLLECTION), {
       userId,
@@ -20,11 +20,11 @@ export const addFavorite = async (userId: string, article: Article): Promise<voi
       articleData: article
     });
   } catch (error) {
-    throw new Error(`お気に入り追加エラー ${userId}/${article.article_id}: ${String(error)}`);
+    throw new Error(`お気に入り作成エラー ${userId}/${article.article_id}: ${String(error)}`);
   }
 };
 
-export const removeFavorite = async (userId: string, articleId: string): Promise<void> => {
+export const deleteFavorite = async (userId: string, articleId: string): Promise<void> => {
   try {
     const q = query(
       collection(db, FAVORITES_COLLECTION),
@@ -39,14 +39,14 @@ export const removeFavorite = async (userId: string, articleId: string): Promise
   }
 };
 
-export const getFavorites = async (userId: string): Promise<FavoriteArticle[]> => {
+export const findFavoritesByUser = async (userId: string): Promise<FavoriteDocument[]> => {
   try {
     const q = query(
       collection(db, FAVORITES_COLLECTION),
       where('userId', '==', userId)
     );
     const snapshot = await getDocs(q);
-    const favorites = snapshot.docs.map(doc => {
+    return snapshot.docs.map(doc => {
       const data = doc.data();
       return {
         userId: data.userId,
@@ -55,25 +55,20 @@ export const getFavorites = async (userId: string): Promise<FavoriteArticle[]> =
         articleData: data.articleData
       };
     });
-
-    return favorites;
   } catch (error) {
     throw new Error(`お気に入り取得エラー ${userId}: ${String(error)}`);
   }
 };
 
-export const checkIsFavorite = async (userId: string, articleId: string): Promise<boolean> => {
+export const findFavoriteByUserAndArticle = async (userId: string, articleId: string): Promise<boolean> => {
   try {
     const q = query(
       collection(db, FAVORITES_COLLECTION),
       where('userId', '==', userId),
       where('articleId', '==', articleId)
     );
-
     const snapshot = await getDocs(q);
-    const isFavorite = !snapshot.empty;
-
-    return isFavorite;
+    return !snapshot.empty;
   } catch (error) {
     throw new Error(`お気に入り確認エラー ${userId}/${articleId}: ${String(error)}`);
   }
