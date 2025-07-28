@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Player } from '../types/player';
-import { fetchPlayers } from '../services/players';
+import { getPlayer } from '../services/players';
 
 interface UsePlayersReturn {
   players: Player[];
@@ -18,7 +18,7 @@ export const usePlayers = (): UsePlayersReturn => {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchPlayers(forceRefresh);
+      const data = await getPlayer(forceRefresh);
       setPlayers(data);
     } catch (err) {
       const errorMessage = `選手一覧取得エラー: ${String(err)}`;

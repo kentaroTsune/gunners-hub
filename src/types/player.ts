@@ -28,3 +28,12 @@ export interface EditState {
   editData: PlayerEditData;
   originalData: PlayerEditData;
 }
+
+export interface FootballApiResponse {
+  squad: Array<{
+    id: number;
+    name: string;
+    position?: string;
+    nationality?: string;
+  }>;
+}
