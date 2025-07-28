@@ -1,39 +1,12 @@
-import { translateText } from './fetchTranslate';
-import { getCachedArticles, setCachedArticles } from '../utils/cache';
-import type { Article } from '../types/article';
+import type { RawArticle } from '../utils/newsTransformer';
 
-interface RawArticle {
-  article_id: string;
-  title: string;
-  link: string;
-  keywords?: string[];
-  creator?: string[];
-  description?: string;
-  content?: string;
-  pubDate: string;
-  pubDateTZ?: string;
-  image_url?: string | null;
-  video_url?: string | null;
-  source_id: string;
-  source_name: string;
-  source_priority?: number;
-  source_url: string;
-  source_icon: string;
-  language?: string;
-  country?: string[];
-  category: string | string[];
-  duplicate?: boolean;
+interface NewsApiResponse {
+  results: RawArticle[];
+  nextPage?: string;
+  totalResults?: number;
 }
 
-export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
-  // キャッシュから取得（強制更新でない場合）
-  if (!forceRefresh) {
-    const cached = getCachedArticles();
-    if (cached) {
-      return cached.data;
-    }
-  }
-
+export const fetchNews = async (): Promise<RawArticle[]> => {
   const {
     VITE_RSS_ENDPOINT: endpoint,
     VITE_API_KEY: apikey,
@@ -53,61 +26,23 @@ export const fetchNews = async (forceRefresh = false): Promise<Article[]> => {
     category,
   });
 
-  const res = await fetch(`${endpoint}?${params}`, {
-    headers: { 'Content-Type': 'application/json' }
-  });
+  try {
+    const response = await fetch(`${endpoint}?${params}`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-  if (!res.ok) {
-    throw new Error(`HTTPエラー ステータス: ${res.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTPエラー ステータス: ${response.status}`);
+    }
+
+    const data: NewsApiResponse = await response.json();
+
+    if (!data.results || !Array.isArray(data.results)) {
+      throw new Error('無効なAPIレスポンス形式');
+    }
+
+    return data.results;
+  } catch (error) {
+    throw new Error(`ニュースAPI通信エラー: ${String(error)}`);
   }
-
-  const data = await res.json();
-
-  if (!data.results || !Array.isArray(data.results)) {
-    throw new Error('無効なAPIレスポンス形式');
-  }
-
-  // dataをArticle型に変換
-  const articles: Article[] = await Promise.all(
-    data.results.map(async (item: RawArticle) => {
-      let translatedTitle = '';
-      try {
-        translatedTitle = await translateText(item.title);
-      } catch (error) {
-        throw new Error(`翻訳エラー: ${String(error)}`);
-      }
-
-      return {
-        article_id: item.article_id,
-        title: translatedTitle || item.title,
-        link: item.link,
-        keywords: item.keywords || [],
-        creator: item.creator || [],
-        description: item.description || '',
-        content: item.content || '',
-        pubDate: item.pubDate,
-        pubDateTZ: item.pubDateTZ || 'UTC',
-        image_url: item.image_url || null,
-        video_url: item.video_url || null,
-        source_id: item.source_id,
-        source_name: item.source_name,
-        source_priority: item.source_priority || 0,
-        source_url: item.source_url,
-        source_icon: item.source_icon,
-        language: item.language || 'english',
-        country: item.country || [],
-        category: Array.isArray(item.category)
-          ? item.category.map((cat: string) => cat.toLowerCase())
-          : [String(item.category).toLowerCase()],
-        duplicate: item.duplicate || false,
-        isFavorite: false,
-        translatedTitle
-      };
-    })
-  );
-
-  // キャッシュに保存
-  setCachedArticles(articles);
-
-  return articles;
 };

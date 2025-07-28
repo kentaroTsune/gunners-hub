@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { Article } from '../types/article';
-import { fetchNews } from '../api/fetchNews';
+import { getNews } from '../services/news';
 import { findFavoritesByUser } from '../repositories/favoriteRepository';
 import { useAuthContext } from '../context/AuthContext';
 
@@ -64,7 +64,7 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await fetchNews();
+        const data = await getNews();
         setArticles(data);
 
         if (currentUser) {
