@@ -44,8 +44,3 @@ export const transformFootballApiToPlayers = async (data: FootballApiResponse): 
   const rawPlayers = transformApiResponseToRawPlayers(data);
   return await transformRawPlayersToPlayers(rawPlayers);
 };
-
-export const extractEditableFields = (editData: PlayerEditData): Partial<PlayerEditData> => {
-  const { image, ...editableFields } = editData;
-  return editableFields;
-};
