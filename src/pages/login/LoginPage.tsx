@@ -1,36 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useAuthContext } from '../../context/AuthContext';
-import { signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
+import { useLoginPage } from './LoginPage_hooks';
+import { LOGIN_MESSAGES } from './LoginPage_utils';
 
 export const LoginPage = () => {
-  const { currentUser } = useAuthContext();
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleLogin = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      await signInWithPopup(auth, provider);
-      navigate('/');
-    } catch (error) {
-      const errorMessage = `ログインエラー: ${String(error)}`;
-      setError('ログインに失敗しました。もう一度お試しください。');
-      console.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (currentUser) {
-      navigate('/');
-    }
-  }, [currentUser, navigate]);
+  const { currentUser, isLoading, error, handleLogin } = useLoginPage();
 
   if (currentUser) return null;
 
@@ -38,8 +10,8 @@ export const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">ログイン</h2>
-          <p className="text-gray-600 mt-2">Googleアカウントでログインしてください</p>
+          <h2 className="text-2xl font-bold text-gray-800">{LOGIN_MESSAGES.TITLE}</h2>
+          <p className="text-gray-600 mt-2">{LOGIN_MESSAGES.DESCRIPTION}</p>
         </div>
 
         {error && (
@@ -60,7 +32,7 @@ export const LoginPage = () => {
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-red-500 hover:bg-red-600 text-white'
           }`}
-          aria-label="Googleアカウントでログイン"
+          aria-label={LOGIN_MESSAGES.ARIA_LABEL}
         >
           {isLoading ? (
             <>
@@ -85,7 +57,7 @@ export const LoginPage = () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
-              <span>ログイン中...</span>
+              <span>{LOGIN_MESSAGES.BUTTON_LOADING}</span>
             </>
           ) : (
             <>
@@ -111,7 +83,7 @@ export const LoginPage = () => {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              <span>Googleでログイン</span>
+              <span>{LOGIN_MESSAGES.BUTTON_LOGIN}</span>
             </>
           )}
         </button>
@@ -119,4 +91,3 @@ export const LoginPage = () => {
     </div>
   );
 };
-
