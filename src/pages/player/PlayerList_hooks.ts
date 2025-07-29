@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import type { Player } from '../types/player';
-import { getPlayer } from '../services/players';
+import type { Player } from '../../types/player';
+import { getPlayer } from '../../services/players';
 
 interface UsePlayersReturn {
   players: Player[];

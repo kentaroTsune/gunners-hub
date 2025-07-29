@@ -1,4 +1,4 @@
-import { usePlayers } from '../../hooks/usePlayers';
+import { usePlayers } from './PlayerList_hooks';
 import { PlayerCard } from '../../components/common/Card/PlayerCard';
 import { NavigationButton } from '../../components/common/Button/NavigationButton';
 

@@ -1,14 +1,54 @@
 import { useParams } from 'react-router-dom';
-import { useMemo, useState } from 'react';
-import { usePlayerDetail } from '../../../hooks/usePlayerDetail';
+import { useMemo, useState, useEffect } from 'react';
+import { fetchFirestorePlayer } from '../../../repositories/playerRepository';
 import { useAuthWithAdmin } from '../../../hooks/useAuthWithAdmin';
 import { updatePlayerData } from '../../../repositories/playerRepository';
-import type { PlayerEditData, PlayerStats } from '../../../types/player';
+import type { Player, PlayerEditData, PlayerStats } from '../../../types/player';
 import { defaultStats, createEditDataFromPlayer, hasDataChanges, normalizeStatValue, showAlert } from './PlayerDetail_utils';
+
+interface UsePlayerDetailReturn {
+  player: Player | null;
+  loading: boolean;
+  error: string | null;
+}
+
+const usePlayerDetail = (id: string): UsePlayerDetailReturn => {
+  const [player, setPlayer] = useState<Player | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) {
+      setPlayer(null);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    const loadPlayer = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchFirestorePlayer(id);
+        setPlayer(data);
+      } catch (error) {
+        const errorMessage = `選手詳細取得エラー ${id}: ${String(error)}`;
+        setError(errorMessage);
+        setPlayer(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPlayer();
+  }, [id]);
+
+  return { player, loading, error };
+};
 
 export const usePlayerDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { player } = usePlayerDetail(id || '');
+  const { player, loading, error } = usePlayerDetail(id || '');
   const { isAdmin } = useAuthWithAdmin();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -96,7 +136,11 @@ export const usePlayerDetailPage = () => {
   };
 
   return {
+    // 基本機能
     player,
+    loading,
+    error,
+    // 管理者・編集機能
     isAdmin,
     isEditing,
     editData,
