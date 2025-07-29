@@ -1,6 +1,5 @@
 import { translateText } from '../api/fetchTranslate';
-import type { FootballApiResponse, Player, PlayerEditData } from '../types/player';
-
+import type { FootballApiResponse, Player } from '../types/player';
 
 interface RawPlayer {
   id: string;

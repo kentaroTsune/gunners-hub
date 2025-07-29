@@ -32,7 +32,7 @@ const normalizeCategory = (category: string | string[]): string[] => {
 };
 
 // 単一のRawArticleをArticleに変換（翻訳なし）
-export const transformRawArticleToArticle = (item: RawArticle): Omit<Article, 'translatedTitle'> => {
+const transformRawArticleToArticle = (item: RawArticle): Omit<Article, 'translatedTitle'> => {
   return {
     article_id: item.article_id,
     title: item.title,
@@ -59,7 +59,7 @@ export const transformRawArticleToArticle = (item: RawArticle): Omit<Article, 't
 };
 
 // 翻訳付きでRawArticleをArticleに変換
-export const transformRawArticleWithTranslation = async (item: RawArticle): Promise<Article> => {
+const transformRawArticleWithTranslation = async (item: RawArticle): Promise<Article> => {
   const baseArticle = transformRawArticleToArticle(item);
 
   let translatedTitle = '';
@@ -81,9 +81,4 @@ export const transformRawArticlesToArticles = async (rawArticles: RawArticle[]):
   return await Promise.all(
     rawArticles.map(transformRawArticleWithTranslation)
   );
-};
-
-// 翻訳なしで複数のRawArticleをArticleに一括変換
-export const transformRawArticlesToArticlesWithoutTranslation = (rawArticles: RawArticle[]): Omit<Article, 'translatedTitle'>[] => {
-  return rawArticles.map(transformRawArticleToArticle);
 };
