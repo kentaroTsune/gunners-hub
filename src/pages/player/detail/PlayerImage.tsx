@@ -1,22 +1,12 @@
-import { getPlayerImageUrlWithFallback } from '../../../utils/playerImage';
+import { usePlayerImage } from './PlayerImage_hooks';
 
 interface PlayerImageProps {
   playerId?: string | null;
   name?: string;
 }
 
-const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
-
 export const PlayerImage = ({ playerId, name = '選手' }: PlayerImageProps) => {
-  const imageUrl = playerId ? getPlayerImageUrlWithFallback(playerId) : DUMMY_IMAGE;
-  const altText = playerId ? `${name}のプロフィール画像` : 'プロフィール画像がありません';
-
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    if (img.src !== DUMMY_IMAGE) {
-      img.src = DUMMY_IMAGE;
-    }
-  }
+  const { imageUrl, altText, handleImageError } = usePlayerImage({ playerId, name });
 
   return (
     <figure className="w-full flex justify-center mb-8">
@@ -28,5 +18,5 @@ export const PlayerImage = ({ playerId, name = '選手' }: PlayerImageProps) => 
         onError={handleImageError}
       />
     </figure>
-  )
-}
+  );
+};
