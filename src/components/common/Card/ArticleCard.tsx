@@ -61,7 +61,7 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
           {article.description || article.content}
         </p>
         <Link
-          to={`/article/${article.article_id}`}
+          to={`/article/detail/${article.article_id}`}
           className="text-red-600 hover:underline font-medium"
           aria-label={`記事「${article.translatedTitle || article.title}」の詳細を読む`}
         >

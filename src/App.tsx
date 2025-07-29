@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/layout/Header/Header.tsx';
 import { Footer } from './components/layout/Footer/Footer.tsx';
-import { ArticleDetail } from './pages/article/ArticleDetail';
+import { ArticleDetail } from './pages/article/detail/ArticleDetail.tsx';
 import { HomePage } from './pages/home/HomePage';
 import { LoginPage } from './pages/login/LoginPage';
 import { PlayerList } from './pages/player/PlayerList';
-import { PlayerDetail } from './pages/player/PlayerDetail';
+import { PlayerDetail } from './pages/player/detail/PlayerDetail';
 import { NewsProvider } from './context/NewsContext';
 import { AuthProvider } from './context/AuthContext';
 import './App.css';
@@ -20,9 +20,9 @@ const AppContent = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/article/:id" element={<ArticleDetail />} />
+          <Route path="/article/detail/:id" element={<ArticleDetail />} />
           <Route path="/player" element={<PlayerList />} />
-          <Route path="/player/:id" element={<PlayerDetail />} />
+          <Route path="/player/detail/:id" element={<PlayerDetail />} />
         </Routes>
       </main>
       <Footer />

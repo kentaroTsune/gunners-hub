@@ -18,7 +18,7 @@ export const PlayerCard = ({ player }: PlayerCardProps) => {
 
   return (
     <Link
-      to={`/player/${player.id}`}
+      to={`/player/detail/${player.id}`}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:opacity-90 cursor-pointer transition-opacity"
       aria-label={`選手 ${player.name} の詳細ページへ`}
     >

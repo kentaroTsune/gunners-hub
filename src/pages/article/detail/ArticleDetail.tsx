@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { useNewsContext } from '../../context/NewsContext';
-import { NavigationButton } from '../../components/common/Button/NavigationButton';
+import { useNewsContext } from '../../../context/NewsContext';
+import { NavigationButton } from '../../../components/common/Button/NavigationButton';
 import { useMemo } from 'react';
 
 const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
