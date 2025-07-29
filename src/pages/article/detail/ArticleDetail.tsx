@@ -1,45 +1,8 @@
-import { useParams } from 'react-router-dom';
-import { useNewsContext } from '../../../context/NewsContext';
 import { NavigationButton } from '../../../components/common/Button/NavigationButton';
-import { useMemo } from 'react';
-
-const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
+import { useArticleDetail } from './ArticleDetail_hooks';
 
 export const ArticleDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { articles } = useNewsContext();
-
-  const article = useMemo(() => {
-    if (!id) return null;
-    return articles.find(article => article.article_id === id) || null;
-  }, [articles, id]);
-
-  const safeImageUrl = useMemo(() => {
-    if (!article?.image_url) return DUMMY_IMAGE;
-
-    try {
-      const url = new URL(article.image_url);
-      return url.protocol === 'https:' ? article.image_url : DUMMY_IMAGE;
-    } catch {
-      return DUMMY_IMAGE;
-    }
-  }, [article?.image_url]);
-
-  const formattedDate = useMemo(() => {
-    if (!article?.pubDate) return '';
-    return new Date(article.pubDate).toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }, [article?.pubDate]);
-
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    if (img.src !== DUMMY_IMAGE) {
-      img.src = DUMMY_IMAGE;
-    }
-  };
+  const { article, safeImageUrl, formattedDate, handleImageError } = useArticleDetail();
 
   if (!article) {
     return (
@@ -55,6 +18,7 @@ export const ArticleDetail = () => {
       <div className="flex justify-between items-start mb-6">
         <NavigationButton text={'戻る'} />
       </div>
+
       <div className="flex items-center gap-4 mb-4">
         <h1 className="text-2xl font-bold">
           {article.translatedTitle || article.title}
@@ -90,7 +54,6 @@ export const ArticleDetail = () => {
       >
         元の記事を読む
       </a>
-
     </article>
   );
 };
