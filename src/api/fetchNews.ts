@@ -1,3 +1,4 @@
+import { apikey, category, endpoint, qInTitle, rawLang } from '../constants';
 import type { RawArticle } from '../utils/newsTransformer';
 
 interface NewsApiResponse {
@@ -7,13 +8,6 @@ interface NewsApiResponse {
 }
 
 export const fetchNews = async (): Promise<RawArticle[]> => {
-  const {
-    VITE_RSS_ENDPOINT: endpoint,
-    VITE_API_KEY: apikey,
-    VITE_API_QUERY_Q: qInTitle,
-    VITE_API_QUERY_LANGUAGE: rawLang,
-    VITE_API_QUERY_CATEGORY: category,
-  } = import.meta.env;
 
   if (!endpoint || !apikey || !qInTitle || !rawLang || !category) {
     throw new Error('ニュースAPIに必要な環境変数が不足しています');

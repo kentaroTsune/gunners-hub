@@ -3,7 +3,8 @@ import { useAuthContext } from '../../context/AuthContext';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-import { createLoginErrorMessage, LOGIN_REDIRECT_PATH } from './LoginPage_utils';
+import { createLoginErrorMessage } from './LoginPage_utils';
+import { LOGIN_REDIRECT_PATH } from '../../constants';
 
 export const useLoginPage = () => {
   const { currentUser } = useAuthContext();

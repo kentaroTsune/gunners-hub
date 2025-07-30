@@ -2,22 +2,21 @@ import { Link } from 'react-router-dom';
 import type { Article } from '../../../types/article';
 import { FavoriteButton } from '../../common/Button/FavoriteButton';
 import { useMemo } from 'react';
+import { IMAGE_PATHS } from '../../../constants/ui';
 
 interface ArticleCardProps {
   article: Article;
 }
 
-const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
-
 export const ArticleCard = ({ article }: ArticleCardProps) => {
   const safeImageUrl = useMemo(() => {
-    if (!article.image_url) return DUMMY_IMAGE;
+    if (!article.image_url) return IMAGE_PATHS.DUMMY_IMAGE;
 
     try {
       const url = new URL(article.image_url);
-      return url.protocol === 'https:' ? article.image_url : DUMMY_IMAGE;
+      return url.protocol === 'https:' ? article.image_url : IMAGE_PATHS.DUMMY_IMAGE;
     } catch {
-      return DUMMY_IMAGE;
+      return IMAGE_PATHS.DUMMY_IMAGE;
     }
   }, [article.image_url]);
 
@@ -31,8 +30,8 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
-    if (img.src === DUMMY_IMAGE) {
-      img.src = DUMMY_IMAGE;
+    if (img.src === IMAGE_PATHS.DUMMY_IMAGE) {
+      img.src = IMAGE_PATHS.DUMMY_IMAGE;
     }
   };
 

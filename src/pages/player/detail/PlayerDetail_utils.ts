@@ -1,10 +1,5 @@
-import type { PlayerEditData, PlayerStats } from '../../../types/player';
-
-export const defaultStats: PlayerStats = {
-  appearances: 0,
-  goals: 0,
-  assists: 0,
-};
+import { DEFAULT_PLAYER_STATS } from '../../../constants';
+import type { PlayerEditData } from '../../../types/player';
 
 // プレイヤーデータを編集用データに変換
 export const createEditDataFromPlayer = (player: any): PlayerEditData => {
@@ -14,7 +9,7 @@ export const createEditDataFromPlayer = (player: any): PlayerEditData => {
     nationality: player?.nationality || '',
     image: player?.image || '',
     bio: player?.bio || '',
-    stats: player?.stats || defaultStats
+    stats: player?.stats || DEFAULT_PLAYER_STATS
   };
 };
 

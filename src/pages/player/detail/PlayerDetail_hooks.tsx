@@ -4,7 +4,8 @@ import { fetchFirestorePlayer } from '../../../repositories/playerRepository';
 import { useAuthWithAdmin } from '../../../hooks/useAuthWithAdmin';
 import { updatePlayerData } from '../../../repositories/playerRepository';
 import type { Player, PlayerEditData, PlayerStats } from '../../../types/player';
-import { defaultStats, createEditDataFromPlayer, hasDataChanges, normalizeStatValue, showAlert } from './PlayerDetail_utils';
+import { createEditDataFromPlayer, hasDataChanges, normalizeStatValue, showAlert } from './PlayerDetail_utils';
+import { DEFAULT_PLAYER_STATS } from '../../../constants';
 
 interface UsePlayerDetailReturn {
   player: Player | null;
@@ -57,7 +58,7 @@ export const usePlayerDetailPage = () => {
     position: '',
     nationality: '',
     bio: '',
-    stats: defaultStats
+    stats: DEFAULT_PLAYER_STATS
   });
   const [saving, setSaving] = useState(false);
 

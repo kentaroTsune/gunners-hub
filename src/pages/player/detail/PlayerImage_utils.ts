@@ -1,4 +1,4 @@
-export const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
+import { IMAGE_PATHS } from '../../../constants/ui';
 
 // プレイヤー画像のalt属性テキストを生成
 export const createPlayerImageAltText = (playerId?: string | null, name?: string): string => {
@@ -10,8 +10,8 @@ export const createPlayerImageAltText = (playerId?: string | null, name?: string
 export const createPlayerImageErrorHandler = () => {
   return (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
-    if (img.src !== DUMMY_IMAGE) {
-      img.src = DUMMY_IMAGE;
+    if (img.src !== IMAGE_PATHS.DUMMY_IMAGE) {
+      img.src = IMAGE_PATHS.DUMMY_IMAGE;
     }
   };
 };

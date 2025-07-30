@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { getPlayerImageUrlWithFallback } from '../../../utils/playerImage';
-import { createPlayerImageAltText, createPlayerImageErrorHandler, DUMMY_IMAGE } from './PlayerImage_utils';
+import { createPlayerImageAltText, createPlayerImageErrorHandler } from './PlayerImage_utils';
+import { IMAGE_PATHS } from '../../../constants/ui';
 
 interface UsePlayerImageProps {
   playerId?: string | null;
@@ -9,7 +10,7 @@ interface UsePlayerImageProps {
 
 export const usePlayerImage = ({ playerId, name }: UsePlayerImageProps) => {
   const imageUrl = useMemo(() =>
-    playerId ? getPlayerImageUrlWithFallback(playerId) : DUMMY_IMAGE,
+    playerId ? getPlayerImageUrlWithFallback(playerId) : IMAGE_PATHS.DUMMY_IMAGE,
     [playerId]
   );
 

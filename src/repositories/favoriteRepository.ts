@@ -1,8 +1,7 @@
 import { collection, addDoc, deleteDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import type { Article } from '../types/article';
-
-const FAVORITES_COLLECTION = 'favorites';
+import { FAVORITES_COLLECTION } from '../constants';
 
 export interface FavoriteDocument {
   userId: string;

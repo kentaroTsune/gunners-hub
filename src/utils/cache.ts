@@ -1,21 +1,6 @@
 import type { Article, CachedArticles } from '../types/article';
 import type { Player } from '../types/player';
-
-const CACHE_DURATION = {
-  ONE_HOUR: 60 * 60 * 1000,
-  ONE_DAY: 24 * 60 * 60 * 1000,
-  ONE_WEEK: 7 * 24 * 60 * 60 * 1000,
-} as const;
-
-const CACHE_TYPES = {
-  NEWS: 'news',
-  PLAYERS: 'players',
-} as const;
-
-const CACHE_KEY_NEWS = 'arsenal-news-cache';
-const CACHE_KEY_PLAYERS = 'arsenal-players-cache';
-const NEWS_CACHE_EXPIRE_MS = CACHE_DURATION.ONE_HOUR;
-const PLAYERS_CACHE_EXPIRE_MS = CACHE_DURATION.ONE_WEEK;
+import { CACHE_KEYS, CACHE_EXPIRY, CACHE_TYPES } from '../constants/cache';
 
 interface GenericCache<T> {
   timestamp: number;
@@ -34,6 +19,7 @@ const getGenericCache = <T>(key: string, expiry: number): T | null => {
     return null;
   }
 }
+
 // キャッシュ更新用関数
 const setGenericCache = <T>(key: string, data: T): void => {
   const cache: GenericCache<T> = {
@@ -45,27 +31,29 @@ const setGenericCache = <T>(key: string, data: T): void => {
 
 // 記事データのキャッシュ管理
 export const getCachedArticles = (): CachedArticles | null => {
-  return getGenericCache<CachedArticles>(CACHE_KEY_NEWS, NEWS_CACHE_EXPIRE_MS);
+  return getGenericCache<CachedArticles>(CACHE_KEYS.NEWS, CACHE_EXPIRY.NEWS);
 }
+
 export const setCachedArticles = (articles: Article[]): void => {
   const cache: CachedArticles = {
     timestamp: Date.now(),
     data: articles
   };
-  setGenericCache(CACHE_KEY_NEWS, cache);
+  setGenericCache(CACHE_KEYS.NEWS, cache);
 }
 
 // 選手データのキャッシュ管理
 export const getCachedPlayers = (): Player[] | null => {
-  return getGenericCache<Player[]>(CACHE_KEY_PLAYERS, PLAYERS_CACHE_EXPIRE_MS);
+  return getGenericCache<Player[]>(CACHE_KEYS.PLAYERS, CACHE_EXPIRY.PLAYERS);
 }
+
 export const setCachedPlayers = (players: Player[]): void => {
-  setGenericCache(CACHE_KEY_PLAYERS, players);
+  setGenericCache(CACHE_KEYS.PLAYERS, players);
 }
 
 // キャッシュクリア
 export const clearCache = (type: 'news' | 'players' = CACHE_TYPES.NEWS): void => {
   localStorage.removeItem(
-    type === CACHE_TYPES.NEWS ? CACHE_KEY_NEWS : CACHE_KEY_PLAYERS
+    type === CACHE_TYPES.NEWS ? CACHE_KEYS.NEWS : CACHE_KEYS.PLAYERS
   );
 };

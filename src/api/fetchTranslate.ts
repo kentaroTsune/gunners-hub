@@ -1,3 +1,5 @@
+import { TRANSLATION_CONFIG, API_ENDPOINTS } from "../constants";
+
 interface TranslationResponse {
   translations: {
     detected_source_language: string;
@@ -10,13 +12,6 @@ interface TranslationRequest {
   target_lang: string;
 }
 
-const TRANSLATION_CONFIG = {
-  API_ENDPOINT: '/api/deepl/v2/translate',
-  TARGET_LANGUAGE: 'JA',
-  REQUEST_METHOD: 'POST',
-  CONTENT_TYPE: 'application/json',
-} as const;
-
 export const translateText = async (text: string): Promise<string> => {
   if (!text.trim()) return text;
 
@@ -26,7 +21,7 @@ export const translateText = async (text: string): Promise<string> => {
       target_lang: TRANSLATION_CONFIG.TARGET_LANGUAGE
     };
 
-    const response = await fetch(TRANSLATION_CONFIG.API_ENDPOINT, {
+    const response = await fetch(API_ENDPOINTS.TRANSLATE, {
       method: TRANSLATION_CONFIG.REQUEST_METHOD,
       headers: {
         'Content-Type': TRANSLATION_CONFIG.CONTENT_TYPE

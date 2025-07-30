@@ -1,7 +1,4 @@
-const IMAGE_PATHS = {
-  BASE_PATH: '/src/assets/img',
-  DUMMY_IMAGE: '/src/assets/img/dummy.jpg',
-} as const;
+import { IMAGE_PATHS } from '../constants/ui';
 
 export const getPlayerImageUrlWithFallback = (playerId: string | null): string => {
   if (!playerId) {

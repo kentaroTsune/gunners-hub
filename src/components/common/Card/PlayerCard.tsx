@@ -1,18 +1,17 @@
 import { Link } from 'react-router-dom';
 import { getPlayerImageUrlWithFallback } from '../../../utils/playerImage';
 import type { Player } from '../../../types/player';
+import { IMAGE_PATHS } from '../../../constants/ui';
 
 interface PlayerCardProps {
   player: Player;
 }
 
-const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
-
 export const PlayerCard = ({ player }: PlayerCardProps) => {
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
-    if (img.src !== DUMMY_IMAGE) {
-      img.src = DUMMY_IMAGE;
+    if (img.src !== IMAGE_PATHS.DUMMY_IMAGE) {
+      img.src = IMAGE_PATHS.DUMMY_IMAGE;
     }
   };
 

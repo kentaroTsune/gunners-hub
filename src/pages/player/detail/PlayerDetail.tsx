@@ -4,7 +4,7 @@ import { PlayerBioSection } from './PlayerBioSection';
 import { PlayerInfo } from './PlayerInfo';
 import { PlayerImage } from './PlayerImage';
 import { usePlayerDetailPage } from './PlayerDetail_hooks';
-import { defaultStats } from './PlayerDetail_utils';
+import { DEFAULT_PLAYER_STATS } from '../../../constants';
 
 export const PlayerDetail = () => {
   const {
@@ -197,15 +197,15 @@ export const PlayerDetail = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <StatCard
                 title="出場試合数"
-                value={player?.stats?.appearances ?? defaultStats.appearances}
+                value={player?.stats?.appearances ?? DEFAULT_PLAYER_STATS.appearances}
               />
               <StatCard
                 title="得点"
-                value={player?.stats?.goals ?? defaultStats.goals}
+                value={player?.stats?.goals ?? DEFAULT_PLAYER_STATS.goals}
               />
               <StatCard
                 title="アシスト"
-                value={player?.stats?.assists ?? defaultStats.assists}
+                value={player?.stats?.assists ?? DEFAULT_PLAYER_STATS.assists}
               />
             </div>
           </section>

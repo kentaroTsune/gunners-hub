@@ -1,14 +1,14 @@
-export const DUMMY_IMAGE = '/src/assets/img/dummy.jpg';
+import { IMAGE_PATHS } from '../../../constants/ui';
 
 // 画像URLを取得
 export const getSafeImageUrl = (imageUrl?: string | null): string => {
-  if (!imageUrl) return DUMMY_IMAGE;
+  if (!imageUrl) return IMAGE_PATHS.DUMMY_IMAGE;
 
   try {
     const url = new URL(imageUrl);
-    return url.protocol === 'https:' ? imageUrl : DUMMY_IMAGE;
+    return url.protocol === 'https:' ? imageUrl : IMAGE_PATHS.DUMMY_IMAGE;
   } catch {
-    return DUMMY_IMAGE;
+    return IMAGE_PATHS.DUMMY_IMAGE;
   }
 };
 
@@ -27,8 +27,8 @@ export const formatArticleDate = (pubDate?: string): string => {
 export const createImageErrorHandler = () => {
   return (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
-    if (img.src !== DUMMY_IMAGE) {
-      img.src = DUMMY_IMAGE;
+    if (img.src !== IMAGE_PATHS.DUMMY_IMAGE) {
+      img.src = IMAGE_PATHS.DUMMY_IMAGE;
     }
   };
 };

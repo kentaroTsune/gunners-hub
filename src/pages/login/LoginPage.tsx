@@ -1,5 +1,5 @@
+import { LOGIN_MESSAGES } from '../../constants';
 import { useLoginPage } from './LoginPage_hooks';
-import { LOGIN_MESSAGES } from './LoginPage_utils';
 
 export const LoginPage = () => {
   const { currentUser, isLoading, error, handleLogin } = useLoginPage();
