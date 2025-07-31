@@ -1,4 +1,7 @@
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { queryClient } from './lib/queryClient';
 import { Header } from './components/layout/Header/Header.tsx';
 import { Footer } from './components/layout/Footer/Footer.tsx';
 import { ArticleDetail } from './pages/article/detail/ArticleDetail.tsx';
@@ -32,13 +35,18 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <NewsProvider>
-        <Router>
-          <AppContent />
-        </Router>
-      </NewsProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <NewsProvider>
+          <Router>
+            <AppContent />
+          </Router>
+        </NewsProvider>
+      </AuthProvider>
+
+      {/* 開発環境でのみDevtools表示 */}
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+    </QueryClientProvider>
   );
 };
 

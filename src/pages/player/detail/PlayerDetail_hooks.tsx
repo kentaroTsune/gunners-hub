@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
-import { useMemo, useState, useEffect } from 'react';
-import { fetchFirestorePlayer } from '../../../repositories/playerRepository';
+import { useMemo, useState } from 'react';
 import { useAuthWithAdmin } from '../../../hooks/useAuthWithAdmin';
-import { updatePlayerData } from '../../../repositories/playerRepository';
 import type { Player, PlayerEditData, PlayerStats } from '../../../types/player';
 import { createEditDataFromPlayer, hasDataChanges, normalizeStatValue, showAlert } from './PlayerDetail_utils';
 import { DEFAULT_PLAYER_STATS } from '../../../constants';
+import { usePlayerDetailQuery } from '../../../hooks/queries/usePlayerDetailQuery';
+import { usePlayerMutation } from '../../../hooks/mutations/usePlayerMutation';
 
 interface UsePlayerDetailReturn {
   player: Player | null;
@@ -14,43 +14,20 @@ interface UsePlayerDetailReturn {
 }
 
 const usePlayerDetail = (id: string): UsePlayerDetailReturn => {
-  const [player, setPlayer] = useState<Player | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: player, isLoading: loading, error } = usePlayerDetailQuery(id);
 
-  useEffect(() => {
-    if (!id) {
-      setPlayer(null);
-      setLoading(false);
-      setError(null);
-      return;
-    }
-
-    const loadPlayer = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await fetchFirestorePlayer(id);
-        setPlayer(data);
-      } catch (error) {
-        const errorMessage = `選手詳細取得エラー ${id}: ${String(error)}`;
-        setError(errorMessage);
-        setPlayer(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPlayer();
-  }, [id]);
-
-  return { player, loading, error };
+  return {
+    player: player ?? null,
+    loading,
+    error: error ? `選手詳細取得エラー ${id}: ${String(error)}` : null,
+  };
 };
 
 export const usePlayerDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { player, loading, error } = usePlayerDetail(id || '');
   const { isAdmin } = useAuthWithAdmin();
+  const playerMutation = usePlayerMutation();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState<PlayerEditData>({
@@ -60,7 +37,6 @@ export const usePlayerDetailPage = () => {
     bio: '',
     stats: DEFAULT_PLAYER_STATS
   });
-  const [saving, setSaving] = useState(false);
 
   // 編集データの初期化
   const initializeEditData = useMemo(() =>
@@ -123,29 +99,30 @@ export const usePlayerDetailPage = () => {
     }
 
     try {
-      setSaving(true);
-      await updatePlayerData(player.id, editData);
+      await playerMutation.mutateAsync({
+        playerId: player.id,
+        data: editData
+      });
+
       setIsEditing(false);
+
       showAlert.saveSuccess();
-      window.location.reload();
     } catch (error) {
       console.error(`選手データ更新エラー ${player.id}: ${String(error)}`);
       showAlert.saveError();
-    } finally {
-      setSaving(false);
     }
   };
 
   return {
     // 基本機能
     player,
-    loading,
+    loading: loading || playerMutation.isPending,
     error,
     // 管理者・編集機能
     isAdmin,
     isEditing,
     editData,
-    saving,
+    saving: playerMutation.isPending,
     hasChanges,
     handleEditStart,
     handleEditCancel,

@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { usePlayersWithRefresh } from '../../hooks/queries/usePlayersQuery';
 import type { Player } from '../../types/player';
-import { getPlayer } from '../../services/players';
 
 interface UsePlayersReturn {
   players: Player[];
@@ -10,32 +9,16 @@ interface UsePlayersReturn {
 }
 
 export const usePlayers = (): UsePlayersReturn => {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { players, isLoading: loading, error, refresh: queryRefresh } = usePlayersWithRefresh();
 
-  const loadPlayers = async (forceRefresh = false) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getPlayer(forceRefresh);
-      setPlayers(data);
-    } catch (err) {
-      const errorMessage = `選手一覧取得エラー: ${String(err)}`;
-      setError(errorMessage);
-      setPlayers([]);
-    } finally {
-      setLoading(false);
-    }
+  const refresh = async (): Promise<void> => {
+    await queryRefresh();
   };
 
-  useEffect(() => {
-    loadPlayers();
-  }, []);
-
-  const refresh = async () => {
-    await loadPlayers(true);
+  return {
+    players,
+    loading,
+    error: error ? `選手一覧取得エラー: ${String(error)}` : null,
+    refresh,
   };
-
-  return { players, loading, error, refresh };
 };

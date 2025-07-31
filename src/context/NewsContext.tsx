@@ -1,15 +1,14 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import type { Article } from '../types/article';
-import { getNews } from '../services/news';
 import { findFavoritesByUser } from '../repositories/favoriteRepository';
 import { useAuthContext } from '../context/AuthContext';
+import { useNewsQuery } from '../hooks/queries/useNewsQuery';
 
 interface NewsContextType {
   articles: Article[];
   favorites: string[];
   loading: boolean;
-  setArticles: (articles: Article[]) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   selectedCategory: string;
@@ -21,20 +20,27 @@ const NewsContext = createContext<NewsContextType | undefined>(undefined);
 
 export const NewsProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser } = useAuthContext();
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  // TanStack Queryでニュース取得
+  const { data: newsData, isLoading: newsLoading, error: newsError } = useNewsQuery();
+  // UI状態管理（検索・フィルター）
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
+
+  // ニュースデータの加工（お気に入り状態付与）
+  const articlesWithFavorites = useMemo(() => {
+    if (!newsData) return [];
+
+    return newsData.map(article => ({
+      ...article,
+      isFavorite: favorites.includes(article.article_id)
+    }));
+  }, [newsData, favorites]);
 
   const clearFavoriteStatus = () => {
     setFavorites([]);
-    setArticles(prevArticles =>
-      prevArticles.map(article => ({
-        ...article,
-        isFavorite: false
-      }))
-    );
   }
 
   const updateFavorites = async () => {
@@ -47,37 +53,20 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
       const userFavorites = await findFavoritesByUser(currentUser.uid);
       const favoriteIds = userFavorites.map(fav => fav.articleId);
       setFavorites(favoriteIds);
-
-      setArticles(prevArticles =>
-        prevArticles.map(article => ({
-          ...article,
-          isFavorite: favoriteIds.includes(article.article_id)
-        }))
-      );
     } catch (error) {
-      throw new Error(`お気に入り更新エラー ${currentUser.uid}: ${String(error)}`);
+      console.error(`お気に入り更新エラー ${currentUser.uid}: ${String(error)}`);
+    } finally {
+      setFavoritesLoading(false);
     }
   };
 
-  // データ取得とお気に入り更新
+  // お気に入り情報の初期取得・更新
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await getNews();
-        setArticles(data);
-
-        if (currentUser) {
-          await updateFavorites();
-        }
-      } catch (error) {
-        console.error(`ニュース取得エラー: ${String(error)}`);
-        setArticles([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    if (currentUser) {
+      updateFavorites();
+    } else {
+      clearFavoriteStatus();
+    }
   }, [currentUser]);
 
   // ログアウト時のクリア
@@ -87,17 +76,32 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [currentUser]);
 
-  const filteredArticles = articles.filter(article => {
-    const matchesSearch = searchQuery === '' ||
-      article.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.description?.toLowerCase().includes(searchQuery.toLowerCase());
+  // フィルタリング処理
+  const filteredArticles = useMemo(() => {
+    if (!articlesWithFavorites.length) return [];
 
-    const matchesFavorite = selectedCategory === 'favorites'
-      ? favorites.includes(article.article_id)
-      : true;
+    return articlesWithFavorites.filter(article => {
+      const matchesSearch = searchQuery === '' ||
+        article.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesSearch && matchesFavorite;
-  });
+      const matchesFavorite = selectedCategory === 'favorites'
+        ? favorites.includes(article.article_id)
+        : true;
+
+      return matchesSearch && matchesFavorite;
+    });
+  }, [articlesWithFavorites, searchQuery, selectedCategory, favorites]);
+
+  // ローディング状態の統合
+  const loading = newsLoading || favoritesLoading;
+
+  // エラーハンドリング（ニュース取得エラー時）
+  useEffect(() => {
+    if (newsError) {
+      console.error(`ニュース取得エラー: ${String(newsError)}`);
+    }
+  }, [newsError]);
 
   return (
     <NewsContext.Provider
@@ -105,7 +109,6 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
         articles: filteredArticles,
         favorites,
         loading,
-        setArticles,
         searchQuery,
         setSearchQuery,
         selectedCategory,

@@ -9,6 +9,10 @@ export const TRANSLATION_CONFIG = {
   CONTENT_TYPE: 'application/json',
 } as const;
 
+export const FOOTBALL_CONFIG = {
+  ARSENAL_TEAM_ID: 57,
+} as const;
+
 export const {
     VITE_RSS_ENDPOINT: endpoint,
     VITE_API_KEY: apikey,
