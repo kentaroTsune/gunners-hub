@@ -1,5 +1,5 @@
 import { useNewsContext } from '../../../context/NewsContext';
-import { useAuthContext } from '../../../stores/authStore';
+import { useAuthStore } from '../../../stores/authStore';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ const CATEGORIES = {
 } as const;
 
 export const Header = ({ hideActions = false }: HeaderProps) => {
-  const { currentUser } = useAuthContext();
+  const currentUser = useAuthStore((state) => state.currentUser);
   const { setSearchQuery, setSelectedCategory, selectedCategory } = useNewsContext();
 
   const handleLogout = async () => {

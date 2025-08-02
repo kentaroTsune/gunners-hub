@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import type { Article } from '../types/article';
 import { findFavoritesByUser } from '../repositories/favoriteRepository';
-import { useAuthContext } from '../stores/authStore';
+import { useAuthStore } from '../stores/authStore';
 import { useNewsQuery } from '../hooks/queries/useNewsQuery';
 
 interface NewsContextType {
@@ -19,7 +19,7 @@ interface NewsContextType {
 const NewsContext = createContext<NewsContextType | undefined>(undefined);
 
 export const NewsProvider = ({ children }: { children: ReactNode }) => {
-  const { currentUser } = useAuthContext();
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   // TanStack Queryでニュース取得
   const { data: newsData, isLoading: newsLoading, error: newsError } = useNewsQuery();

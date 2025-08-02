@@ -80,14 +80,6 @@ export const useAuthStore = create<AuthState>()(
   )
 );
 
-// 既存コードとの互換性維持
-export const useAuthContext = () => {
-  const currentUser = useAuthStore((state) => state.currentUser);
-  const loading = useAuthStore((state) => state.loading);
-
-  return { currentUser, loading };
-};
-
 // useAuthWithAdmin の新実装
 export const useAuthWithAdmin = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
