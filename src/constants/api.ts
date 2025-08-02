@@ -1,6 +1,6 @@
 export const API_ENDPOINTS = {
-  FOOTBALL: '/api/football/teams',
-  TRANSLATE: '/api/deepl/v2/translate',
+  FOOTBALL: 'https://api.football-data.org/v4/api/football/teams',
+  TRANSLATE: 'https://api.deepl.com/v2/translate',
 } as const;
 
 export const TRANSLATION_CONFIG = {
@@ -14,9 +14,10 @@ export const FOOTBALL_CONFIG = {
 } as const;
 
 export const {
-    VITE_RSS_ENDPOINT: endpoint,
-    VITE_API_KEY: apikey,
-    VITE_API_QUERY_Q: qInTitle,
-    VITE_API_QUERY_LANGUAGE: rawLang,
-    VITE_API_QUERY_CATEGORY: category,
+    VITE_NEWS_RSS_ENDPOINT: endpoint,
+    VITE_NEWS_API_KEY: apikey,
+    VITE_NEWS_API_QUERY_Q: qInTitle,
+    VITE_NEWS_API_QUERY_LANGUAGE: rawLang,
+    VITE_NEWS_API_QUERY_CATEGORY: category,
+    VITE_DEEPL_API_KEY: deeplApiKey,
   } = import.meta.env;
