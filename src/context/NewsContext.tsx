@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import type { Article } from '../types/article';
 import { findFavoritesByUser } from '../repositories/favoriteRepository';
-import { useAuthContext } from '../context/AuthContext';
+import { useAuthContext } from '../stores/authStore';
 import { useNewsQuery } from '../hooks/queries/useNewsQuery';
 
 interface NewsContextType {

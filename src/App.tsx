@@ -10,7 +10,7 @@ import { LoginPage } from './pages/login/LoginPage';
 import { PlayerList } from './pages/player/PlayerList';
 import { PlayerDetail } from './pages/player/detail/PlayerDetail';
 import { NewsProvider } from './context/NewsContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthIitializer } from './stores/authStore';
 import './App.css';
 
 const AppContent = () => {
@@ -36,13 +36,13 @@ const AppContent = () => {
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+      <AuthIitializer>
         <NewsProvider>
           <Router>
             <AppContent />
           </Router>
         </NewsProvider>
-      </AuthProvider>
+      </AuthIitializer>
 
       {/* 開発環境でのみDevtools表示 */}
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}

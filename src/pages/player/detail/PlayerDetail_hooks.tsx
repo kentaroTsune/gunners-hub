@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useMemo, useState } from 'react';
-import { useAuthWithAdmin } from '../../../hooks/useAuthWithAdmin';
+import { useAuthWithAdmin } from '../../../stores/authStore';
 import type { Player, PlayerEditData, PlayerStats } from '../../../types/player';
 import { createEditDataFromPlayer, hasDataChanges, normalizeStatValue, showAlert } from './PlayerDetail_utils';
 import { DEFAULT_PLAYER_STATS } from '../../../constants';

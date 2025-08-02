@@ -1,5 +1,5 @@
 import { useNewsContext } from '../../../context/NewsContext';
-import { useAuthContext } from '../../../context/AuthContext';
+import { useAuthContext } from '../../../stores/authStore';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase';
 import { Link } from 'react-router-dom';

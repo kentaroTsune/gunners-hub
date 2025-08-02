@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Article } from '../../../types/article';
-import { useAuthContext } from '../../../context/AuthContext';
+import { useAuthContext } from '../../../stores/authStore';
 import { createFavorite, deleteFavorite, findFavoriteByUserAndArticle } from '../../../repositories/favoriteRepository';
 import { useNewsContext } from '../../../context/NewsContext';
 
