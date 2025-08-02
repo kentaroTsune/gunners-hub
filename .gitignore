@@ -29,3 +29,8 @@ dist-ssr
 # ai
 .clinerules
 memory-bank
+
+# Firebase
+.firebase/
+hosting.*.cache
+firebase-debug.log
