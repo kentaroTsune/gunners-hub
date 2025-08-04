@@ -1,6 +1,6 @@
 export const IMAGE_PATHS = {
-  BASE_PATH: '/src/assets/img',
-  DUMMY_IMAGE: '/src/assets/img/dummy.jpg',
+  BASE_PATH: '/img/',
+  DUMMY_IMAGE: '/img/dummy.jpg',
 } as const;
 
 export const BREAKPOINTS = {

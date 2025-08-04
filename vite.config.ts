@@ -10,14 +10,6 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     server: {
       proxy: {
-        '/api/deepl': {
-          target: 'https://api-free.deepl.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/deepl/, ''),
-          headers: {
-            'Authorization': `DeepL-Auth-Key ${env.VITE_DEEPL_API_KEY}`
-          }
-        },
         '/api/football': {
           target: 'https://api.football-data.org/v4',
           changeOrigin: true,

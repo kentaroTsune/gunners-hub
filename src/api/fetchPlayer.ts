@@ -1,18 +1,37 @@
+// src/api/fetchPlayer.ts
 import type { FootballApiResponse } from "../types/player";
-import { API_ENDPOINTS } from "../constants";
+
+interface FootballFunctionRequest {
+  teamId: number;
+}
 
 export const fetchPlayer = async (teamId: number): Promise<FootballApiResponse> => {
   try {
-    const response = await fetch(`${API_ENDPOINTS.FOOTBALL}/${teamId}`);
+    // Firebase Functions URL
+    const functionUrl = `https://getfootballdata-ndfr76tzaq-uc.a.run.app`;
+
+    const requestBody: FootballFunctionRequest = {
+      teamId,
+    };
+
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
 
     if (!response.ok) {
-      throw new Error(`APIデータ取得エラー: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Football Function エラー: ${response.status} - ${errorText}`);
     }
 
-    const data = await response.json();
-
+    const data: FootballApiResponse = await response.json();
     return data;
+
   } catch (error) {
+    console.error(`Football API通信エラー:`, error);
     throw new Error(`Football API通信エラー: ${String(error)}`);
   }
 };

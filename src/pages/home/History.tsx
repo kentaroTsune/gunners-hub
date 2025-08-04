@@ -1,3 +1,8 @@
+import foundations from "../../assets/img/history/foundations.jpg";
+import chapman_herbert from "../../assets/img/history/chapman_herbert.jpg";
+import wenger from "../../assets/img/history/wenger.jpg";
+import graham from "../../assets/img/history/graham.jpg";
+
 export const History = () => {
   return (
     <div className="space-y-6 py-8">
@@ -9,7 +14,7 @@ export const History = () => {
           <div className="flex flex-col lg:flex-row h-full">
             <figure className="flex-1 relative overflow-hidden">
               <img
-                src="/src/assets/img/history/foundations.jpg"
+                src={foundations}
                 alt="アーセナルの基盤"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -26,7 +31,7 @@ export const History = () => {
           <div className="flex flex-col h-full">
             <figure className="flex-1 relative overflow-hidden">
               <img
-                src="/src/assets/img/history/chapman_herbert.jpg"
+                src={chapman_herbert}
                 alt="ハーバート・チャップマン"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -41,7 +46,7 @@ export const History = () => {
           <div className="flex flex-col h-full">
             <figure className="flex-1 relative overflow-hidden">
               <img
-                src="/src/assets/img/history/wenger.jpg"
+                src={wenger}
                 alt="アーセン・ベンゲル"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -58,7 +63,7 @@ export const History = () => {
           <div className="flex flex-col h-full">
             <figure className="flex-1 relative overflow-hidden">
               <img
-                src="/src/assets/img/history/graham.jpg"
+                src={graham}
                 alt="グラハム"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

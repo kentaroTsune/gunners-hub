@@ -1,35 +1,41 @@
-import { TRANSLATION_CONFIG, API_ENDPOINTS } from "../constants";
-import { deeplApiKey } from "../constants/api";
+// src/api/fetchTranslate.ts
+import { TRANSLATION_CONFIG } from "../constants";
 
-interface TranslationResponse {
-  translations: {
-    detected_source_language: string;
-    text: string;
-  }[];
+interface FunctionResponse {
+  translatedText: string;
+  detectedLanguage?: string;
 }
 
-interface TranslationRequest {
-  text: string[];
-  target_lang: string;
-  auth_key: string;
+interface FunctionRequest {
+  text: string;
+  targetLang: string;
 }
+
+// リクエスト間隔制御
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL = 100; // 100ms間隔
 
 export const translateText = async (text: string): Promise<string> => {
   if (!text.trim()) return text;
 
-  if (!deeplApiKey) {
-    console.warn('DeepL API キーが設定されていません。翻訳をスキップします。');
-    return text;
-  }
-
   try {
-    const requestBody: TranslationRequest = {
-      auth_key: deeplApiKey,
-      text: [text],
-      target_lang: TRANSLATION_CONFIG.TARGET_LANGUAGE,
+    // リクエスト間隔制御
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastRequestTime;
+    if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+      const waitTime = MIN_REQUEST_INTERVAL - timeSinceLastRequest;
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+    lastRequestTime = Date.now();
+
+    const functionUrl = `https://translatetext-ndfr76tzaq-uc.a.run.app`;
+
+    const requestBody: FunctionRequest = {
+      text,
+      targetLang: TRANSLATION_CONFIG.TARGET_LANGUAGE,
     };
 
-    const response = await fetch(API_ENDPOINTS.TRANSLATE, {
+    const response = await fetch(functionUrl, {
       method: TRANSLATION_CONFIG.REQUEST_METHOD,
       headers: {
         'Content-Type': TRANSLATION_CONFIG.CONTENT_TYPE
@@ -37,29 +43,29 @@ export const translateText = async (text: string): Promise<string> => {
       body: JSON.stringify(requestBody)
     });
 
-    // レスポンスのContent-Typeチェック
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      const responseText = await response.text();
-      console.error('翻訳API: JSON以外のレスポンス:', responseText.slice(0, 200));
-      throw new Error(`翻訳API: 予期しないレスポンス形式 (${contentType})`);
+      throw new Error(`翻訳Function: 予期しないレスポンス形式`);
     }
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('翻訳API エラーレスポンス:', errorText);
-      throw new Error(`翻訳APIが失敗しました: ${response.status} ${response.statusText}`);
+      // 429エラーの場合は元のテキストを返す（サイレントフォールバック）
+      if (response.status === 500) {
+        console.warn(`翻訳制限到達、元テキスト使用: "${text.slice(0, 30)}..."`);
+        return text;
+      }
+      throw new Error(`翻訳Functionが失敗しました: ${response.status}`);
     }
 
-    const data: TranslationResponse = await response.json();
+    const data: FunctionResponse = await response.json();
 
-    if (!data.translations || !Array.isArray(data.translations) || data.translations.length === 0) {
-      console.error('翻訳API: 無効なレスポンス構造:', data);
+    if (!data.translatedText) {
       throw new Error('無効な翻訳レスポンス形式です');
     }
 
-    return data.translations[0].text;
+    return data.translatedText;
   } catch (error) {
-    throw new Error(`翻訳エラー: "${text.slice(0, 20)}...": ${String(error)}`);
+    console.error(`翻訳エラー、元テキスト使用: ${String(error)}`);
+    return text; // エラー時は元のテキストを返す
   }
 };
