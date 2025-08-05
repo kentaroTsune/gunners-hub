@@ -7,7 +7,7 @@ interface FootballFunctionRequest {
 export const fetchPlayer = async (teamId: number): Promise<FootballApiResponse> => {
   try {
     // Firebase Functions URL
-    const functionUrl = `https://getfootballdata-ndfr76tzaq-uc.a.run.app`;
+    const functionUrl = import.meta.env.VITE_FIREBASE_FOOTBALL_DATA;
 
     const requestBody: FootballFunctionRequest = {
       teamId,

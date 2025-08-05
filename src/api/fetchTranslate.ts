@@ -14,7 +14,7 @@ export const translateText = async (text: string): Promise<string> => {
   if (!text.trim()) return text;
 
   try {
-    const functionUrl = `https://translatetext-ndfr76tzaq-uc.a.run.app`;
+    const functionUrl = import.meta.env.VITE_FIREBASE_TRANSLATE_TEXT;
 
     const requestBody: FunctionRequest = {
       text,

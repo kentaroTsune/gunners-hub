@@ -18,7 +18,7 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
   }
 
   try {
-    const functionUrl = `https://batchtranslatetext-ndfr76tzaq-uc.a.run.app`;
+    const functionUrl = import.meta.env.VITE_FIREBASE_BATCH_TRANSLATE_TEXT;
 
     const requestBody: BatchFunctionRequest = {
       texts,
