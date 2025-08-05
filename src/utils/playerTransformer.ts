@@ -1,4 +1,4 @@
-import { translateText } from '../api/fetchTranslate';
+import { batchTranslateTexts } from '../api/batchTranslate';
 import type { FootballApiResponse, Player } from '../types/player';
 
 interface RawPlayer {
@@ -20,23 +20,36 @@ const transformApiResponseToRawPlayers = (data: FootballApiResponse): RawPlayer[
 
 // RawPlayerを翻訳済みPlayerに変換
 const transformRawPlayersToPlayers = async (rawPlayers: RawPlayer[]): Promise<Player[]> => {
-  return await Promise.all(
-    rawPlayers.map(async (player: RawPlayer) => {
-      let translatedName = '';
-      try {
-        translatedName = await translateText(player.name);
-      } catch (error) {
-        console.warn(`選手名翻訳エラー "${player.name}": ${String(error)}`);
-      }
+  if (!rawPlayers || rawPlayers.length === 0) {
+    return [];
+  }
 
-      return {
-        id: player.id,
-        name: translatedName || player.name,
-        nationality: player.nationality,
-        position: player.position,
-      };
-    })
-  );
+  try {
+    // 全ての選手名を配列として抽出
+    const playerNames = rawPlayers.map(player => player.name);
+
+    // バッチ翻訳実行
+    const translatedNames = await batchTranslateTexts(playerNames);
+
+    // 翻訳された名前を使用してPlayer配列を作成
+    return rawPlayers.map((player, index) => ({
+      id: player.id,
+      name: translatedNames[index] || player.name,
+      nationality: player.nationality,
+      position: player.position,
+    }));
+
+  } catch (error) {
+    console.error('選手名バッチ翻訳エラー:', error);
+
+    // エラー時は元の名前をそのまま使用
+    return rawPlayers.map(player => ({
+      id: player.id,
+      name: player.name,
+      nationality: player.nationality,
+      position: player.position,
+    }));
+  }
 };
 
 export const transformFootballApiToPlayers = async (data: FootballApiResponse): Promise<Player[]> => {

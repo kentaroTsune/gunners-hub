@@ -1,4 +1,3 @@
-// src/api/fetchPlayer.ts
 import type { FootballApiResponse } from "../types/player";
 
 interface FootballFunctionRequest {

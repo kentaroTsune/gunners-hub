@@ -1,4 +1,3 @@
-// src/api/fetchTranslate.ts
 import { TRANSLATION_CONFIG } from "../constants";
 
 interface FunctionResponse {
@@ -11,23 +10,10 @@ interface FunctionRequest {
   targetLang: string;
 }
 
-// リクエスト間隔制御
-let lastRequestTime = 0;
-const MIN_REQUEST_INTERVAL = 100; // 100ms間隔
-
 export const translateText = async (text: string): Promise<string> => {
   if (!text.trim()) return text;
 
   try {
-    // リクエスト間隔制御
-    const now = Date.now();
-    const timeSinceLastRequest = now - lastRequestTime;
-    if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
-      const waitTime = MIN_REQUEST_INTERVAL - timeSinceLastRequest;
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-    }
-    lastRequestTime = Date.now();
-
     const functionUrl = `https://translatetext-ndfr76tzaq-uc.a.run.app`;
 
     const requestBody: FunctionRequest = {
@@ -49,7 +35,7 @@ export const translateText = async (text: string): Promise<string> => {
     }
 
     if (!response.ok) {
-      // 429エラーの場合は元のテキストを返す（サイレントフォールバック）
+      // 元のテキストを返す
       if (response.status === 500) {
         console.warn(`翻訳制限到達、元テキスト使用: "${text.slice(0, 30)}..."`);
         return text;
@@ -66,6 +52,6 @@ export const translateText = async (text: string): Promise<string> => {
     return data.translatedText;
   } catch (error) {
     console.error(`翻訳エラー、元テキスト使用: ${String(error)}`);
-    return text; // エラー時は元のテキストを返す
+    return text; // 元のテキストを返す
   }
 };
