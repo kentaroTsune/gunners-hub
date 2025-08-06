@@ -23,6 +23,7 @@ export const NewsProvider = ({ children }: { children: ReactNode }) => {
 
   // TanStack Queryでニュース取得
   const { data: newsData, isLoading: newsLoading, error: newsError } = useNewsQuery();
+
   // UI状態管理（検索・フィルター）
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');

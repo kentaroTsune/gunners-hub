@@ -25,10 +25,7 @@ const transformRawPlayersToPlayers = async (rawPlayers: RawPlayer[]): Promise<Pl
   }
 
   try {
-    // 全ての選手名を配列として抽出
     const playerNames = rawPlayers.map(player => player.name);
-
-    // バッチ翻訳実行
     const translatedNames = await batchTranslateTexts(playerNames);
 
     // 翻訳された名前を使用してPlayer配列を作成

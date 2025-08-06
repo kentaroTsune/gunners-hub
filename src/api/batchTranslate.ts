@@ -35,11 +35,11 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      throw new Error(`バッチ翻訳Function: 予期しないレスポンス形式`);
+      throw new Error(`バッチ翻訳: 予期しないレスポンス形式`);
     }
 
     if (!response.ok) {
-      throw new Error(`バッチ翻訳Functionが失敗しました: ${response.status}`);
+      throw new Error(`バッチ翻訳が失敗しました: ${response.status}`);
     }
 
     const data: BatchFunctionResponse = await response.json();
@@ -52,7 +52,7 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
 
   } catch (error) {
     console.error(`バッチ翻訳エラー:`, error);
-    // エラー時は元のテキスト配列を返す
+
     return texts;
   }
 };

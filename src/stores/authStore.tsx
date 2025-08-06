@@ -80,7 +80,6 @@ export const useAuthStore = create<AuthState>()(
   )
 );
 
-// useAuthWithAdmin の新実装
 export const useAuthWithAdmin = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const isAdmin = useAuthStore((state) => state.isAdmin);
@@ -95,7 +94,6 @@ export const useAuthWithAdmin = () => {
   };
 }
 
-// AuthInitializer コンポーネント
 export const AuthIitializer = ({ children }: { children: React.ReactNode }) => {
   const { loading, initialize } = useAuthStore();
 

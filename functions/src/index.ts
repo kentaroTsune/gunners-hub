@@ -1,4 +1,3 @@
-// functions/src/index.ts
 import { onRequest } from 'firebase-functions/v2/https';
 import { logger } from 'firebase-functions';
 
@@ -23,21 +22,21 @@ interface FootballRequest {
   teamId: number;
 }
 
-// 単一翻訳Function
+// DeepL API 単一翻訳
 export const translateText = onRequest({
   cors: true,
   secrets: ["DEEPL_API_KEY"],
 }, async (req, res) => {
   try {
     if (req.method !== 'POST') {
-      res.status(405).json({ error: 'Method not allowed' });
+      res.status(405).json({ error: 'このメソッドは許可されていません。' });
       return;
     }
 
     const { text, targetLang = 'JA' }: TranslationRequest = req.body;
 
     if (!text || !text.trim()) {
-      res.status(400).json({ error: 'Text is required' });
+      res.status(400).json({ error: 'テキストが必要です' });
       return;
     }
 
@@ -54,15 +53,15 @@ export const translateText = onRequest({
     });
 
     if (!deeplResponse.ok) {
-      logger.error('DeepL API Error:', deeplResponse.status, deeplResponse.statusText);
-      res.status(500).json({ error: 'Translation service error' });
+      logger.error('DeepL API エラー:', deeplResponse.status, deeplResponse.statusText);
+      res.status(500).json({ error: '翻訳サービスエラー' });
       return;
     }
 
     const data: DeepLResponse = await deeplResponse.json();
 
     if (!data.translations || data.translations.length === 0) {
-      res.status(500).json({ error: 'Invalid translation response' });
+      res.status(500).json({ error: '無効な翻訳応答' });
       return;
     }
 
@@ -73,26 +72,26 @@ export const translateText = onRequest({
       detectedLanguage: data.translations[0].detected_source_language
     });
   } catch (error) {
-    logger.error('Translation error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    logger.error('翻訳エラー:', error);
+    res.status(500).json({ error: '内部サーバーエラー' });
   }
 });
 
-// バッチ翻訳Function
+// DeepL API バッチ翻訳
 export const batchTranslateText = onRequest({
   cors: true,
   secrets: ["DEEPL_API_KEY"],
 }, async (req, res) => {
   try {
     if (req.method !== 'POST') {
-      res.status(405).json({ error: 'Method not allowed' });
+      res.status(405).json({ error: 'このメソッドは許可されていません。' });
       return;
     }
 
     const { texts, targetLang = 'JA' }: BatchTranslationRequest = req.body;
 
     if (!texts || !Array.isArray(texts) || texts.length === 0) {
-      res.status(400).json({ error: 'Texts array is required' });
+      res.status(400).json({ error: 'テキスト配列は必須です。' });
       return;
     }
 
@@ -100,17 +99,11 @@ export const batchTranslateText = onRequest({
     const validTexts = texts.filter(text => text && text.trim());
 
     if (validTexts.length === 0) {
-      res.json({ translatedTexts: texts }); // 元のテキストをそのまま返す
+      res.json({ translatedTexts: texts });
       return;
     }
 
-    logger.info('バッチ翻訳リクエスト:', {
-      total: texts.length,
-      valid: validTexts.length,
-      targetLang
-    });
-
-    // DeepL APIは最大50テキストまで対応
+    // 最大50テキストまで対応
     const batchSize = 50;
     const allTranslations: string[] = [];
 
@@ -131,16 +124,16 @@ export const batchTranslateText = onRequest({
         });
 
         if (!deeplResponse.ok) {
-          logger.error(`DeepL API Error (batch ${i}):`, deeplResponse.status, deeplResponse.statusText);
+          logger.error(`DeepL API エラー (batch ${i}):`, deeplResponse.status, deeplResponse.statusText);
 
           // レート制限の場合は元のテキストを使用
           if (deeplResponse.status === 429) {
             logger.warn(`DeepL APIレート制限 (batch ${i}), 元テキスト使用`);
-            allTranslations.push(...batch); // 元のテキストを追加
+            allTranslations.push(...batch);
             continue;
           }
 
-          throw new Error(`DeepL API error: ${deeplResponse.status}`);
+          throw new Error(`DeepL API エラー: ${deeplResponse.status}`);
         }
 
         const data: DeepLResponse = await deeplResponse.json();
@@ -161,7 +154,6 @@ export const batchTranslateText = onRequest({
 
       } catch (error) {
         logger.error(`バッチ翻訳エラー (batch ${i}):`, error);
-        // エラー時は元のテキストを使用
         allTranslations.push(...batch);
       }
     }
@@ -175,7 +167,7 @@ export const batchTranslateText = onRequest({
         result[index] = allTranslations[translationIndex] || originalText;
         translationIndex++;
       } else {
-        result[index] = originalText; // 空のテキストはそのまま
+        result[index] = originalText;
       }
     });
 
@@ -187,26 +179,26 @@ export const batchTranslateText = onRequest({
     res.json({ translatedTexts: result });
 
   } catch (error) {
-    logger.error('Batch translation error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    logger.error('バッチ翻訳エラー:', error);
+    res.status(500).json({ error: '内部サーバーエラー' });
   }
 });
 
-// football-data.org API Function
+// football-data.org API 選手データ取得
 export const getFootballData = onRequest({
   cors: true,
   secrets: ["FOOTBALL_API_KEY"],
 }, async (req, res) => {
   try {
     if (req.method !== 'POST') {
-      res.status(405).json({ error: 'Method not allowed' });
+      res.status(405).json({ error: 'このメソッドは許可されていません。' });
       return;
     }
 
     const { teamId }: FootballRequest = req.body;
 
     if (!teamId) {
-      res.status(400).json({ error: 'Team ID is required' });
+      res.status(400).json({ error: 'チームIDが必要です。' });
       return;
     }
 
@@ -218,10 +210,10 @@ export const getFootballData = onRequest({
     });
 
     if (!footballResponse.ok) {
-      logger.error('Football API Error:', footballResponse.status, footballResponse.statusText);
+      logger.error('Football API エラー:', footballResponse.status, footballResponse.statusText);
       const errorText = await footballResponse.text();
       res.status(500).json({
-        error: 'Football API service error',
+        error: 'Football API サービスエラー',
         details: {
           status: footballResponse.status,
           message: errorText
@@ -234,7 +226,7 @@ export const getFootballData = onRequest({
 
     res.json(data);
   } catch (error) {
-    logger.error('Football API処理エラー:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    logger.error('Football API 処理エラー:', error);
+    res.status(500).json({ error: '内部サーバーエラー' });
   }
 });
