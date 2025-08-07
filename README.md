@@ -14,7 +14,7 @@
 ## 技術スタック
 
 - フロントエンド：React（TypeScript）、TanStack Query、React Router
-- バックエンド：Firebase Functions（TypeScript）、DeepL API、football-data.org API、football News API
+- バックエンド：Cloud Firestore、Authentication、Firebase Functions（TypeScript）、DeepL API、football-data.org API、football News API
 - 状態管理：React Context、Zustand
 - その他：ESLint, Prettier
 
