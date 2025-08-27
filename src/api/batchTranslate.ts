@@ -11,11 +11,8 @@ interface BatchFunctionRequest {
 
 export const batchTranslateTexts = async (texts: string[]): Promise<string[]> => {
   if (!texts || texts.length === 0) return texts;
-
-  // 空のテキストのみの場合はそのまま返す
-  if (texts.every(text => !text || !text.trim())) {
-    return texts;
-  }
+  // テキストが空の場合
+  if (texts.every(text => !text || !text.trim())) return texts;
 
   try {
     const functionUrl = import.meta.env.VITE_FIREBASE_BATCH_TRANSLATE_TEXT;
@@ -34,6 +31,7 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
     });
 
     const contentType = response.headers.get('content-type');
+
     if (!contentType || !contentType.includes('application/json')) {
       throw new Error(`バッチ翻訳: 予期しないレスポンス形式`);
     }

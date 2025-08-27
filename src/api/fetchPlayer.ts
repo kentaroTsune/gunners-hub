@@ -6,7 +6,6 @@ interface FootballFunctionRequest {
 
 export const fetchPlayer = async (teamId: number): Promise<FootballApiResponse> => {
   try {
-    // Firebase Functions URL
     const functionUrl = import.meta.env.VITE_FIREBASE_FOOTBALL_DATA;
 
     const requestBody: FootballFunctionRequest = {
@@ -27,10 +26,11 @@ export const fetchPlayer = async (teamId: number): Promise<FootballApiResponse> 
     }
 
     const data: FootballApiResponse = await response.json();
+
     return data;
 
   } catch (error) {
-    console.error(`Football API通信エラー:`, error);
-    throw new Error(`Football API通信エラー: ${String(error)}`);
+    console.error(`Football API取得エラー:`, error);
+    throw new Error(`Football API取得エラー: ${String(error)}`);
   }
 };

@@ -8,11 +8,11 @@ interface NewsApiResponse {
 }
 
 export const fetchNews = async (): Promise<RawArticle[]> => {
-
   if (!endpoint || !apikey || !qInTitle || !rawLang || !category) {
     throw new Error('ニュースAPIに必要な環境変数が不足しています');
   }
 
+  // クエリ部分のカスタマイズ
   const params = new URLSearchParams({
     apikey,
     qInTitle,
@@ -36,7 +36,8 @@ export const fetchNews = async (): Promise<RawArticle[]> => {
     }
 
     return data.results;
+
   } catch (error) {
-    throw new Error(`ニュースAPI通信エラー: ${String(error)}`);
+    throw new Error(`ニュースAPI取得エラー: ${String(error)}`);
   }
 };
