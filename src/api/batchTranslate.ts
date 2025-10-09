@@ -29,22 +29,17 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
       body: JSON.stringify(requestBody)
     });
 
+    if (!response.ok) {
+      throw new Error(`バッチ翻訳が失敗しました: ${response.status}`);
+    }
+
     // サーバーエラー時のクラッシュを防ぐための処理
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
       throw new Error(`バッチ翻訳: 予期しないレスポンス形式`);
     }
 
-    if (!response.ok) {
-      throw new Error(`バッチ翻訳が失敗しました: ${response.status}`);
-    }
-
     const data: BatchFunctionResponse = await response.json();
-
-    // 形式が配列で存在しているかチェックする処理
-    if (!data.translatedTexts || !Array.isArray(data.translatedTexts)) {
-      throw new Error('無効なバッチ翻訳レスポンス形式です');
-    }
 
     return data.translatedTexts;
 

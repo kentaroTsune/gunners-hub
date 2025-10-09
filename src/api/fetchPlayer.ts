@@ -21,8 +21,14 @@ export const fetchPlayer = async (teamId: number): Promise<FootballApiResponse> 
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorText = await response.text().catch(() => '不明なエラー');
       throw new Error(`Football Function エラー: ${response.status} - ${errorText}`);
+    }
+
+    // サーバーエラー時のクラッシュを防ぐための処理
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error(`Football Function: 予期しないレスポンス形式`);
     }
 
     const data: FootballApiResponse = await response.json();
