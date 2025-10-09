@@ -29,11 +29,6 @@ export const translateText = async (text: string): Promise<string> => {
       body: JSON.stringify(requestBody)
     });
 
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new Error(`翻訳: 予期しないレスポンス形式`);
-    }
-
     if (!response.ok) {
       if (response.status === 500) {
         console.warn(`翻訳制限到達、元テキスト使用: "${text.slice(0, 30)}..."`);
@@ -42,11 +37,13 @@ export const translateText = async (text: string): Promise<string> => {
       throw new Error(`翻訳が失敗しました: ${response.status}`);
     }
 
-    const data: FunctionResponse = await response.json();
-
-    if (!data.translatedText) {
-      throw new Error('無効な翻訳レスポンス形式です');
+    // サーバーエラー時のクラッシュを防ぐための処理
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error(`翻訳: 予期しないレスポンス形式`);
     }
+
+    const data: FunctionResponse = await response.json();
 
     return data.translatedText;
 
