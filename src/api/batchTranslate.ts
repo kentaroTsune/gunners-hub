@@ -11,7 +11,6 @@ interface BatchFunctionRequest {
 
 export const batchTranslateTexts = async (texts: string[]): Promise<string[]> => {
   if (!texts || texts.length === 0) return texts;
-  // テキストが空の場合
   if (texts.every(text => !text || !text.trim())) return texts;
 
   try {
@@ -30,8 +29,8 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
       body: JSON.stringify(requestBody)
     });
 
+    // サーバーエラー時のクラッシュを防ぐための処理
     const contentType = response.headers.get('content-type');
-
     if (!contentType || !contentType.includes('application/json')) {
       throw new Error(`バッチ翻訳: 予期しないレスポンス形式`);
     }
@@ -42,6 +41,7 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
 
     const data: BatchFunctionResponse = await response.json();
 
+    // 形式が配列で存在しているかチェックする処理
     if (!data.translatedTexts || !Array.isArray(data.translatedTexts)) {
       throw new Error('無効なバッチ翻訳レスポンス形式です');
     }
