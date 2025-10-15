@@ -1,8 +1,5 @@
-import { useState, useEffect } from 'react';
 import type { Article } from '../../../types/article';
-import { useAuthStore } from '../../../stores/authStore';
-import { createFavorite, deleteFavorite, findFavoriteByUserAndArticle } from '../../../repositories/favoriteRepository';
-import { useNewsContext } from '../../../context/NewsContext';
+import { useFavorite } from '../../../hooks/useFavorite';
 
 interface FavoriteButtonProps {
   article: Article;
@@ -16,68 +13,25 @@ const sizeClasses = {
 } as const;
 
 export const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) => {
-  const currentUser = useAuthStore((state) => state.currentUser);
-  const { updateFavorites } = useNewsContext();
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { isFavorite, isProcessing, toggleFavorite } = useFavorite(article);
 
-  useEffect(() => {
-    const checkFavoriteStatus = async () => {
-      if (!currentUser?.uid || !article?.article_id) {
-        setIsFavorite(false);
-        return;
-      }
+  const buttonClasses = [
+    sizeClasses[size],
+    'transition-colors',
+    isFavorite
+      ? 'text-[#FF69B4] hover:text-[#FF8FAB]'
+      : 'text-gray-300 hover:text-[#FF8FAB]',
+    isProcessing ? 'opacity-50 cursor-not-allowed' : ''
+  ].join(' ');
 
-      try {
-        const favoriteStatus = await findFavoriteByUserAndArticle(currentUser.uid, article.article_id);
-        setIsFavorite(favoriteStatus);
-      } catch (error) {
-        console.error(`お気に入り状態確認エラー ${currentUser.uid}/${article.article_id}: ${String(error)}`);
-        setIsFavorite(false);
-      }
-    };
-
-    checkFavoriteStatus();
-  }, [currentUser?.uid, article?.article_id]);
-
-  const handleClick = async () => {
-    if (!currentUser) {
-      window.location.href = '/login';
-      return;
-    }
-
-    if (!article?.article_id || isProcessing) return;
-
-    const newFavoriteStatus = !isFavorite;
-    setIsProcessing(true);
-    setIsFavorite(newFavoriteStatus);
-
-    try {
-      if (newFavoriteStatus) {
-        await createFavorite(currentUser.uid, article);
-      } else {
-        await deleteFavorite(currentUser.uid, article.article_id);
-      }
-
-      await updateFavorites();
-    } catch (error) {
-      setIsFavorite(!newFavoriteStatus);
-      throw new Error(`お気に入り操作エラー ${currentUser.uid}/${article.article_id}: ${String(error)}`);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  const ariaLabel = isFavorite ? 'お気に入りから削除' : 'お気に入りに追加';
 
   return (
     <button
-      onClick={handleClick}
+      onClick={toggleFavorite}
       disabled={isProcessing}
-      aria-label={isFavorite ? 'お気に入りから削除' : 'お気に入りに追加'}
-      className={`${sizeClasses[size]} transition-colors ${
-        isFavorite
-          ? 'text-[#FF69B4] hover:text-[#FF8FAB]'
-          : 'text-gray-300 hover:text-[#FF8FAB]'
-      } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+      aria-label={ariaLabel}
+      className={buttonClasses}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -85,6 +39,7 @@ export const FavoriteButton = ({ article, size = 'md' }: FavoriteButtonProps) =>
         fill={isFavorite ? 'currentColor' : 'none'}
         stroke="currentColor"
         strokeWidth="1.5"
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"
