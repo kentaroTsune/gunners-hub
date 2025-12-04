@@ -13,8 +13,8 @@
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.83.0",
     "firebase": "^11.8.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.1.2",
+    "react-dom": "^19.1.2",
     "react-router-dom": "^7.6.0",
     "sass": "^1.89.0",
     "zustand": "^5.0.7"
