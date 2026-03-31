@@ -30,3 +30,20 @@ dist-ssr
 .firebase/
 hosting.*.cache
 firebase-debug.log
+
+# 認証・証明書
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Firebase関連の機密
+firebase-adminsdk*.json  # サービスアカウントキー（要注意）
+*-service-account*.json
+serviceAccount*.json
+google-services.json     # Androidの場合
+
+# データファイル
+*.csv
+*.sqlite
+*.db
