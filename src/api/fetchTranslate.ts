@@ -1,4 +1,5 @@
 import { TRANSLATION_CONFIG } from "../constants";
+import { getApiBaseUrl } from "./apiBaseUrl";
 
 interface FunctionResponse {
   translatedText: string;
@@ -14,7 +15,7 @@ export const translateText = async (text: string): Promise<string> => {
   if (!text.trim()) return text;
 
   try {
-    const functionUrl = import.meta.env.VITE_FIREBASE_TRANSLATE_TEXT;
+    const functionUrl = `${getApiBaseUrl()}/api/translate`;
 
     const requestBody: FunctionRequest = {
       text,

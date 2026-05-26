@@ -1,4 +1,5 @@
 import { TRANSLATION_CONFIG } from "../constants";
+import { getApiBaseUrl } from "./apiBaseUrl";
 
 interface BatchFunctionResponse {
   translatedTexts: string[];
@@ -14,7 +15,7 @@ export const batchTranslateTexts = async (texts: string[]): Promise<string[]> =>
   if (texts.every(text => !text || !text.trim())) return texts;
 
   try {
-    const functionUrl = import.meta.env.VITE_FIREBASE_BATCH_TRANSLATE_TEXT;
+    const functionUrl = `${getApiBaseUrl()}/api/batch-translate`;
 
     const requestBody: BatchFunctionRequest = {
       texts,

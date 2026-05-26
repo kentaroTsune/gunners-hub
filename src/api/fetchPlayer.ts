@@ -1,4 +1,5 @@
 import type { FootballApiResponse } from "../types/player";
+import { getApiBaseUrl } from "./apiBaseUrl";
 
 interface FootballFunctionRequest {
   teamId: number;
@@ -6,7 +7,7 @@ interface FootballFunctionRequest {
 
 export const fetchPlayer = async (teamId: number): Promise<FootballApiResponse> => {
   try {
-    const functionUrl = import.meta.env.VITE_FIREBASE_FOOTBALL_DATA;
+    const functionUrl = `${getApiBaseUrl()}/api/football`;
 
     const requestBody: FootballFunctionRequest = {
       teamId,
@@ -22,13 +23,13 @@ export const fetchPlayer = async (teamId: number): Promise<FootballApiResponse> 
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => '不明なエラー');
-      throw new Error(`Football Function エラー: ${response.status} - ${errorText}`);
+      throw new Error(`Football API エラー: ${response.status} - ${errorText}`);
     }
 
     // サーバーエラー時のクラッシュを防ぐための処理
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      throw new Error(`Football Function: 予期しないレスポンス形式`);
+      throw new Error(`Football API: 予期しないレスポンス形式`);
     }
 
     const data: FootballApiResponse = await response.json();

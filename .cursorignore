@@ -25,6 +25,7 @@ dist-ssr
 
 # local env files
 .env*
+.dev.vars
 
 # Firebase
 .firebase/

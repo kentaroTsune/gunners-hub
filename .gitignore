@@ -25,6 +25,7 @@ dist-ssr
 
 # local env files
 .env*
+.dev.vars
 
 # ai
 .clinerules
@@ -34,3 +35,6 @@ memory-bank
 .firebase/
 hosting.*.cache
 firebase-debug.log
+
+# Cloudflare Workers
+.wrangler/

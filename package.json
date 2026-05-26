@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "worker:dev": "wrangler dev --config workers/gunners-api/wrangler.toml --port 8787",
+    "worker:deploy": "wrangler deploy --config workers/gunners-api/wrangler.toml"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.83.0",
@@ -37,6 +39,7 @@
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.30.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "wrangler": "^4.94.0"
   }
 }
