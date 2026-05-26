@@ -14,8 +14,8 @@
 ## 技術スタック
 
 - フロントエンド：React（TypeScript）、TanStack Query、React Router
-- バックエンド：Cloud Firestore、Authentication、Firebase Functions（TypeScript）、DeepL API、football-data.org API、football News API
-- 状態管理：React Context、Zustand
+- バックエンド：Cloud Firestore、Authentication、Firebase Hosting
+- API 中継：Cloudflare Workers（football-data.org / DeepL）
 - その他：ESLint, Prettier
 
 ## セットアップ
@@ -28,13 +28,35 @@
    ```sh
    npm install
    ```
-3. 必要な環境変数を設定（APIキー等）
-   - `.env`ファイルに `DEEPL_API_KEY`, `FOOTBALL_API_KEY` などを設定
+3. 環境変数を設定
+   - ルートに `.env` を作成（`.env.example` を参考）
+   - 必須：`VITE_API_BASE_URL`（Workers の URL）、Firebase 設定、News API 関連
 
-4. ローカルサーバー起動
+4. Cloudflare Workers（ローカル開発）
+   ```sh
+   cp workers/gunners-api/.dev.vars.example workers/gunners-api/.dev.vars
+   # .dev.vars に FOOTBALL_API_KEY / DEEPL_API_KEY を設定
+   npm run worker:dev
+   ```
+
+5. フロントエンド起動（別ターミナル）
    ```sh
    npm run dev
    ```
+
+## デプロイ
+
+| 対象 | コマンド |
+|------|----------|
+| フロント（Hosting） | `npm run build` → `firebase deploy --only hosting` |
+| API（Workers） | `npm run worker:deploy` |
+
+Workers のシークレット更新:
+```sh
+cd workers/gunners-api
+npx wrangler secret put FOOTBALL_API_KEY
+npx wrangler secret put DEEPL_API_KEY
+```
 
 ## 利用方法
 
