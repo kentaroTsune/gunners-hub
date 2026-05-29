@@ -14,5 +14,4 @@ export const {
     VITE_NEWS_API_QUERY_Q: qInTitle,
     VITE_NEWS_API_QUERY_LANGUAGE: rawLang,
     VITE_NEWS_API_QUERY_CATEGORY: category,
-    VITE_DEEPL_API_KEY: deeplApiKey,
   } = import.meta.env;
