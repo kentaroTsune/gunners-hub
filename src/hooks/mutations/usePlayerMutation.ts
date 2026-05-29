@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updatePlayerData } from '../../repositories/playerRepository';
-import { QUERY_KEYS } from '../../constants/queries';
+import { QUERY_KEYS } from '../../constants';
 import type { PlayerEditData } from '../../types/player';
 
 export const usePlayerMutation = () => {

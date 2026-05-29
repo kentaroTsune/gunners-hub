@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { FOOTBALL_CONFIG } from "../../constants"
-import { QUERY_KEYS, STALE_TIME } from "../../constants/queries"
+import { FOOTBALL_CONFIG, QUERY_KEYS, STALE_TIME } from '../../constants';
 import { transformFootballApiToPlayers } from "../../utils/playerTransformer";
 import { fetchPlayer } from "../../api/fetchPlayer";
 import type { Player } from "../../types/player";

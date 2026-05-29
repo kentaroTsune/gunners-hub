@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchFirestorePlayer } from '../../repositories/playerRepository';
-import { QUERY_KEYS, STALE_TIME } from '../../constants/queries';
+import { QUERY_KEYS, STALE_TIME } from '../../constants';
 import type { Player } from '../../types/player';
 
 export const usePlayerDetailQuery = (id: string) => {

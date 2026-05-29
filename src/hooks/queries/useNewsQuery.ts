@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchNews } from '../../api/fetchNews';
 import { transformRawArticlesToArticles } from '../../utils/newsTransformer';
-import { QUERY_KEYS, STALE_TIME } from '../../constants/queries';
+import { QUERY_KEYS, STALE_TIME } from '../../constants';
 import type { Article } from '../../types/article';
 
 export const useNewsQuery = () => {
