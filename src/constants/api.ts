@@ -1,8 +1,3 @@
-export const API_ENDPOINTS = {
-  FOOTBALL: 'https://api.football-data.org/v4/api/football/teams',
-  TRANSLATE: 'https://api.deepl.com/v2/translate',
-} as const;
-
 export const TRANSLATION_CONFIG = {
   TARGET_LANGUAGE: 'JA',
   REQUEST_METHOD: 'POST',
